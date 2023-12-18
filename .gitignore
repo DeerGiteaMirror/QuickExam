@@ -32,3 +32,6 @@
 *.out
 *.app
 
+# third party
+third_party
+
