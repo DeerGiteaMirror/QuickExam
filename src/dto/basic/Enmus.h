@@ -10,7 +10,7 @@
 
 #include OATPP_CODEGEN_BEGIN(DTO)
 
-namespace AnonExam::dto::basic {
+namespace QuickExam::dto::basic {
 
 ENUM(ContentTypes,
      v_int32,
@@ -29,6 +29,13 @@ ENUM(QuestionType,
      VALUE(long_answer, 4, "long-answer"),
      VALUE(file_upload, 5, "file-upload"))
 
-}  // namespace AnonExam::dto::basic
+ENUM(CandidateStatus,
+     v_int32,
+     VALUE(notified, 0, "notified"),
+     VALUE(attending, 1, "attending"),
+     VALUE(absent, 2, "absent"),
+     VALUE(finished, 3, "finished"))
+
+}  // namespace QuickExam::dto::basic
 
 #include OATPP_CODEGEN_END(DTO)

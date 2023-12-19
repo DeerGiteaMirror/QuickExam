@@ -11,7 +11,7 @@
 
 #include OATPP_CODEGEN_BEGIN(DTO)
 
-namespace AnonExam::dto::basic {
+namespace QuickExam::dto::basic {
 
 class Content : public oatpp::DTO {
     DTO_INIT(Content, DTO)

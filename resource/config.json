@@ -1,0 +1,12 @@
+{
+  "host": "localhost",
+  "port": 8280,
+  "database": {
+    "host": "localhost",
+    "port": 5432,
+    "username": "quickexam",
+    "password": "quickexam",
+    "database": "quickexam"
+  },
+  "swagger_ui": "../resource/swagger-ui"
+}

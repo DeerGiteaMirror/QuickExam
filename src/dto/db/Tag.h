@@ -10,7 +10,7 @@
 
 #include OATPP_CODEGEN_BEGIN(DTO)
 
-namespace AnonExam::dto::db {
+namespace QuickExam::dto::db {
 
 class Tag : public oatpp::DTO {
     DTO_INIT(Tag, DTO)

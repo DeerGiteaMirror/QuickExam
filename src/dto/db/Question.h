@@ -13,7 +13,7 @@
 
 #include OATPP_CODEGEN_BEGIN(DTO)
 
-namespace AnonExam::dto::db {
+namespace QuickExam::dto::db {
 
 class Question : public oatpp::DTO {
     DTO_INIT(Question, DTO)
@@ -23,8 +23,8 @@ class Question : public oatpp::DTO {
         info->description = "Question id";
     }
 
-    DTO_FIELD(Boolean, sub_question) = false;
-    DTO_FIELD_INFO(sub_question) {
+    DTO_FIELD(Boolean, is_sub_question) = false;
+    DTO_FIELD_INFO(is_sub_question) {
         info->description = "Is sub question";
     }
 
@@ -36,6 +36,16 @@ class Question : public oatpp::DTO {
     DTO_FIELD(Enum<basic::QuestionType>::AsNumber, type);
     DTO_FIELD_INFO(type) {
         info->description = "Question type";
+    }
+
+    DTO_FIELD(Int32, estimated_time_sec);
+    DTO_FIELD_INFO(estimated_time_sec) {
+        info->description = "Estimated time to answer the question";
+    }
+
+    DTO_FIELD(Int32, score);
+    DTO_FIELD_INFO(score) {
+        info->description = "Preset score";
     }
 };
 
@@ -102,6 +112,11 @@ class QuestionTag : public oatpp::DTO {
     DTO_FIELD(Int32, tag_id);
     DTO_FIELD_INFO(tag_id) {
         info->description = "Tag id";
+    }
+
+    DTO_FIELD(Int32, priority);
+    DTO_FIELD_INFO(priority) {
+        info->description = "Tag priority";
     }
 };
 
