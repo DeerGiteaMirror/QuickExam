@@ -29,6 +29,6 @@ ENUM(QuestionType,
      VALUE(long_answer, 4, "long-answer"),
      VALUE(file_upload, 5, "file-upload"))
 
-}  // namespace AnonExam::dto
+}  // namespace AnonExam::dto::basic
 
 #include OATPP_CODEGEN_END(DTO)

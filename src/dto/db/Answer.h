@@ -5,10 +5,10 @@
 
 #pragma once
 
+#include <dto/basic/Content.h>
+#include <dto/basic/Enmus.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>
-#include <dtos/basic/Enmus.h>
-#include <dtos/basic/Content.h>
 
 #include OATPP_CODEGEN_BEGIN(DTO)
 
@@ -37,6 +37,6 @@ class AnswerContents : public basic::Content {
     }
 };
 
-}  // namespace AnonExam::dto
+}  // namespace AnonExam::dto::db
 
 #include OATPP_CODEGEN_END(DTO)

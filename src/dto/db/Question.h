@@ -5,9 +5,9 @@
 
 #pragma once
 
-#include <dtos/db/Answer.h>
-#include <dtos/basic/Enmus.h>
-#include <dtos/basic/Content.h>
+#include <dto/basic/Content.h>
+#include <dto/basic/Enmus.h>
+#include <dto/db/Answer.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>
 
@@ -86,6 +86,25 @@ class QuestionSubQuestions : public oatpp::DTO {
     }
 };
 
-}  // namespace AnonExam::dto
+class QuestionTag : public oatpp::DTO {
+    DTO_INIT(QuestionTag, DTO)
+
+    DTO_FIELD(Int32, id);
+    DTO_FIELD_INFO(id) {
+        info->description = "Map id";
+    }
+
+    DTO_FIELD(Int32, question_id);
+    DTO_FIELD_INFO(question_id) {
+        info->description = "Question id";
+    }
+
+    DTO_FIELD(Int32, tag_id);
+    DTO_FIELD_INFO(tag_id) {
+        info->description = "Tag id";
+    }
+};
+
+}  // namespace AnonExam::dto::db
 
 #include OATPP_CODEGEN_END(DTO)

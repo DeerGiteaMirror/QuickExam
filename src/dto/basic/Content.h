@@ -5,9 +5,9 @@
 
 #pragma once
 
+#include <dto/basic/Enmus.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>
-#include <dtos/basic/Enmus.h>
 
 #include OATPP_CODEGEN_BEGIN(DTO)
 
@@ -37,6 +37,6 @@ class Content : public oatpp::DTO {
     }
 };
 
-}
+}  // namespace AnonExam::dto::basic
 
 #include OATPP_CODEGEN_END(DTO)
