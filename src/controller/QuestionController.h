@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <dto/Question.h>
 #include <oatpp/core/macro/codegen.hpp>
 #include <oatpp/core/macro/component.hpp>
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
@@ -20,7 +21,7 @@ class QuestionController : public ApiController {
 public:
     typedef std::shared_ptr<QuestionController> Ptr;
     explicit QuestionController(const std::shared_ptr<ObjectMapper> &objectMapper)
-        : ApiController(objectMapper) {
+        : ApiController(objectMapper, "/api/queation") {
         this->objectMapper = objectMapper;
     }
 
@@ -32,6 +33,14 @@ private:
     std::shared_ptr<ObjectMapper> objectMapper;
 
 public:
+    ENDPOINT("POST", "/create", createQuestion, BODY_DTO(Object<dto::Question>, request)) {
+        return createResponse(Status::CODE_200);
+    }
+    ENDPOINT_INFO(createQuestion) {
+        info->summary = "Create Question";
+        info->addConsumes<Object<dto::Question>>("application/json");
+        info->addResponse(Status::CODE_200);
+    }
 };
 
 }  // namespace QuickExam::controller

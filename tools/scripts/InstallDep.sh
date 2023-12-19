@@ -33,9 +33,7 @@ execute() {
 cd "$CACHE_PATH" || exit 1
 execute "cloning oatpp" "failed to install oatpp" \
     git clone https://ssl.lunadeer.cn:14446/mirror/oatpp.git && \
-    cd oatpp
-execute "checkout oatpp 1.3.0" "failed to checkout oatpp 1.3.0" \
-    git checkout 1.3.0 && \
+    cd oatpp && \
     mkdir build && \
     cd build
 execute "cmake oatpp" "failed to cmake oatpp" \
@@ -49,9 +47,7 @@ execute "installing oatpp" "failed to make install oatpp" \
 cd "$CACHE_PATH" || exit 1
 execute "cloning oatpp-swagger" "failed to install oatpp-swagger" \
     git clone https://ssl.lunadeer.cn:14446/mirror/oatpp-swagger.git && \
-    cd oatpp-swagger
-execute "checkout oatpp-swagger 1.3.0" "failed to checkout oatpp-swagger 1.3.0" \
-    git checkout 1.3.0 && \
+    cd oatpp-swagger && \
     mkdir build && \
     cd build
 execute "cmake oatpp-swagger" "failed to cmake oatpp-swagger" \

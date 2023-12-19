@@ -10,6 +10,7 @@
 #include <controller/AnswerController.h>
 #include <controller/QuestionController.h>
 #include <iostream>
+#include <oatpp-swagger/Controller.hpp>
 #include <oatpp/core/base/CommandLineArguments.hpp>
 #include <oatpp/network/Server.hpp>
 
@@ -30,6 +31,8 @@ void run(const oatpp::base::CommandLineArguments &args) {
     oatpp::web::server::api::Endpoints swaggerDocEndpoints;
     swaggerDocEndpoints.append(answerController->getEndpoints());
     swaggerDocEndpoints.append(questionController->getEndpoints());
+
+    router->addController(oatpp::swagger::Controller::createShared(swaggerDocEndpoints));
 #endif
 
     oatpp::network::Server server(serviceComponent.serverConnectionProvider.getObject(),
