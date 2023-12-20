@@ -63,6 +63,7 @@ public:
         info->summary     = "Delete Tag";
         info->description = "Delete a tag";
         info->addResponse(Status::CODE_200, "Success, then re-get tag list");
+        info->pathParams.add<Int32>("tag_id");
     }
 };
 

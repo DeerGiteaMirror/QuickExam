@@ -61,7 +61,7 @@ public:
     }
 
     ENDPOINT("POST",
-             "/add/{question_id}/sub_question",
+             "/create/{question_id}/sub_question",
              addSubQuestion,
              PATH(Int32, question_id),
              BODY_DTO(Object<dto::Question>, req_body)) {
@@ -71,6 +71,7 @@ public:
         info->addTag("Question");
         info->summary     = "Add Sub Question";
         info->description = "Create a sub question for a question";
+        info->pathParams.add<Int32>("question_id");
         info->addConsumes<Object<dto::Question>>("application/json");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
@@ -86,6 +87,8 @@ public:
         info->addTag("Question");
         info->summary     = "Add Tag";
         info->description = "Bind tag id to question id";
+        info->pathParams.add<Int32>("question_id");
+        info->pathParams.add<Int32>("tag_id");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 
@@ -125,6 +128,8 @@ public:
         info->addTag("Question");
         info->summary     = "Delete Question Tag";
         info->description = "Delete a tag from a question";
+        info->pathParams.add<Int32>("question_id");
+        info->pathParams.add<Int32>("tag_id");
         info->addResponse<Object<dto::Question>>(Status::CODE_200, "application/json");
     }
 
@@ -135,6 +140,7 @@ public:
         info->addTag("Question");
         info->summary     = "Delete Question";
         info->description = "Delete a question";
+        info->pathParams.add<Int32>("question_id");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 
@@ -148,6 +154,7 @@ public:
         info->addTag("Question");
         info->summary     = "Delete Content";
         info->description = "Delete a content";
+        info->pathParams.add<Int32>("content_id");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 };

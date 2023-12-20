@@ -91,6 +91,7 @@ public:
         info->addTag("Answer");
         info->summary     = "Delete Answer";
         info->description = "Delete an answer";
+        info->pathParams.add<Int32>("answer_id");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 
@@ -104,6 +105,7 @@ public:
         info->addTag("Answer");
         info->summary     = "Delete Answer Content";
         info->description = "Delete an answer content";
+        info->pathParams.add<Int32>("content_id");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 };
