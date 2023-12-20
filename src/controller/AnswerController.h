@@ -37,9 +37,74 @@ public:
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(createAnswer) {
-        info->summary = "Create Answer";
+        info->addTag("Answer");
+        info->summary     = "Create Answer";
+        info->description = "Create an answer";
         info->addConsumes<Object<dto::Answer>>("application/json");
-        info->addResponse(Status::CODE_200);
+        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+    }
+
+    ENDPOINT("POST",
+             "/create/content",
+             addAnswerContent,
+             PATH(Int32, question_id),
+             BODY_DTO(Object<dto::AnswerContent>, req_body)) {
+        return createResponse(Status::CODE_200);
+    }
+    ENDPOINT_INFO(addAnswerContent) {
+        info->addTag("Answer");
+        info->summary     = "Add Answer Content";
+        info->description = "Create content for an answer";
+        info->addConsumes<Object<dto::AnswerContent>>("application/json");
+        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+    }
+
+    ENDPOINT("PUT", "/update", updateAnswer, BODY_DTO(Object<dto::Answer>, req_body)) {
+        return createResponse(Status::CODE_200);
+    }
+    ENDPOINT_INFO(updateAnswer) {
+        info->addTag("Answer");
+        info->summary     = "Update Answer";
+        info->description = "Update an answer";
+        info->addConsumes<Object<dto::Answer>>("application/json");
+        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+    }
+
+    ENDPOINT("PUT",
+             "/update/content",
+             updateAnswerContent,
+             BODY_DTO(Object<dto::AnswerContent>, req_body)) {
+        return createResponse(Status::CODE_200);
+    }
+    ENDPOINT_INFO(updateAnswerContent) {
+        info->addTag("Answer");
+        info->summary     = "Update Answer Content";
+        info->description = "Update an answer content";
+        info->addConsumes<Object<dto::AnswerContent>>("application/json");
+        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+    }
+
+    ENDPOINT("DELETE", "/delete/{answer_id}", deleteAnswer, PATH(Int32, answer_id)) {
+        return createResponse(Status::CODE_200);
+    }
+    ENDPOINT_INFO(deleteAnswer) {
+        info->addTag("Answer");
+        info->summary     = "Delete Answer";
+        info->description = "Delete an answer";
+        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+    }
+
+    ENDPOINT("DELETE",
+             "/delete/content/{content_id}",
+             deleteAnswerContent,
+             PATH(Int32, content_id)) {
+        return createResponse(Status::CODE_200);
+    }
+    ENDPOINT_INFO(deleteAnswerContent) {
+        info->addTag("Answer");
+        info->summary     = "Delete Answer Content";
+        info->description = "Delete an answer content";
+        info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 };
 

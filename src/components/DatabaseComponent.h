@@ -6,6 +6,7 @@
 #pragma once
 
 #include <doo/Answer.h>
+#include <doo/Migration.h>
 #include <doo/Question.h>
 #include <doo/Tag.h>
 #include <dto/Configuration.h>
@@ -33,10 +34,16 @@ namespace QuickExam::component {
 
 class DataBaseComponent {
 public:
-    OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Answer>, answer_doo)
+    OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Migration>, migration)
     ([] {
         CREATE_EXECUTOR
-        return std::make_shared<doo::Answer>(executor);
+        return std::make_shared<doo::Migration>(executor);
+    }());
+
+    OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Tag>, tag_doo)
+    ([] {
+        CREATE_EXECUTOR
+        return std::make_shared<doo::Tag>(executor);
     }());
 
     OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Question>, question_doo)
@@ -45,10 +52,10 @@ public:
         return std::make_shared<doo::Question>(executor);
     }());
 
-    OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Tag>, tag_doo)
+    OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Answer>, answer_doo)
     ([] {
         CREATE_EXECUTOR
-        return std::make_shared<doo::Tag>(executor);
+        return std::make_shared<doo::Answer>(executor);
     }());
 };
 

@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.22)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.12)
 
 PROJECT(QuickExam)
 
@@ -11,8 +11,11 @@ FIND_PACKAGE(oatpp-postgresql REQUIRED)
 
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
+FILE(GLOB_RECURSE UTILS_SRC ${CMAKE_SOURCE_DIR}/src/utils/*.cpp)
+
 ADD_EXECUTABLE(QuickExamBackend
-        ${CMAKE_SOURCE_DIR}/src/QuickExamBackend.cpp)
+        ${CMAKE_SOURCE_DIR}/src/QuickExamBackend.cpp
+        ${UTILS_SRC})
 
 TARGET_LINK_LIBRARIES(QuickExamBackend
         PUBLIC oatpp::oatpp

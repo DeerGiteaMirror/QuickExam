@@ -9,6 +9,7 @@
 #include <oatpp/core/base/CommandLineArguments.hpp>
 #include <oatpp/core/macro/component.hpp>
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
+#include <utils/Logger.h>
 
 namespace QuickExam::component {
 
@@ -34,9 +35,27 @@ public:
         return profile;
     }());
 
+    OATPP_CREATE_COMPONENT(oatpp::Object<dto::Log>, logConfig)
+    ([this] {
+        OATPP_COMPONENT(oatpp::Object<dto::Configuration>, profile);  // Get config component
+        std::shared_ptr<utils::Logger> logger = std::make_shared<utils::Logger>(
+            profile->log->save_path, profile->log->max_size_mb, profile->log->preserve_days);
+        if (!profile->log->debug) {
+            logger->disablePriority(oatpp::base::Logger::PRIORITY_D);
+        }
+#if defined(NDEBUG)
+        logger->disablePriority(oatpp::base::Logger::PRIORITY_V);
+#endif
+        oatpp::base::Environment::setLogger(logger);
+        return profile->log;
+    }());
+
     OATPP_CREATE_COMPONENT(oatpp::Object<dto::DataBase>, dbConfig)
     ([this] {
         OATPP_COMPONENT(oatpp::Object<dto::Configuration>, profile);  // 获取配置组件
+
+        LOGI("DataBase", "Connect info: %s:%d/%s", profile->database->host->c_str(),
+             profile->database->port.getValue(0), profile->database->database->c_str());
         return profile->database;
     }());
 };

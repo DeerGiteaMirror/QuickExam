@@ -15,31 +15,13 @@ namespace QuickExam::doo {
 class Answer : public oatpp::orm::DbClient {
 public:
     explicit Answer(const std::shared_ptr<oatpp::orm::Executor> &executor)
-        : oatpp::orm::DbClient(executor) {
-        std::string createTableAnswer = "CREATE TABLE IF NOT EXISTS qe_answer ("
-                                        "id SERIAL PRIMARY KEY,"
-                                        "is_correct BOOLEAN NOT NULL DEFAULT FALSE"
-                                        ");";
-
-        std::string createTableAnswerContent =
-            "CREATE TABLE IF NOT EXISTS qe_answer_content ("
-            "id SERIAL PRIMARY KEY,"
-            "content_type INTEGER NOT NULL,"
-            "content TEXT NOT NULL,"
-            "content_index INTEGER NOT NULL,"
-            "answer_id INTEGER NOT NULL,"
-            "FOREIGN KEY (answer_id) REFERENCES qe_answer(id) ON DELETE CASCADE"
-            ");";
-
-        executor->execute(createTableAnswer, {});
-        executor->execute(createTableAnswerContent, {});
-    }
+        : oatpp::orm::DbClient(executor) {}
 
     QUERY(insertAnswer,
           "INSERT INTO qe_answer "
-          "(id, is_correct) "
+          "(id, is_correct, question_id) "
           "VALUES "
-          "(DEFAULT, :a.is_correct) "
+          "(DEFAULT, :a.is_correct , :a.question_id) "
           "RETURNING id",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Answer>, a))
@@ -53,13 +35,13 @@ public:
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::AnswerContents>, a))
 
-    QUERY(getAnswer,
+    QUERY(getAnswerByQuestionId,
           "SELECT "
           "* "
           "FROM qe_answer "
-          "WHERE id = :id",
+          "WHERE question_id = :question_id",
           PREPARE(true),
-          PARAM(oatpp::Int32, id))
+          PARAM(oatpp::Int32, question_id))
 
     QUERY(getAnswerContentsByAnswerId,
           "SELECT "

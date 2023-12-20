@@ -15,15 +15,7 @@ namespace QuickExam::doo {
 class Tag : public oatpp::orm::DbClient {
 public:
     explicit Tag(const std::shared_ptr<oatpp::orm::Executor> &executor)
-        : oatpp::orm::DbClient(executor) {
-        std::string createTableTag = "CREATE TABLE IF NOT EXISTS qe_tag ("
-                                     "id SERIAL PRIMARY KEY,"
-                                     "name TEXT NOT NULL,"
-                                     "hex_color INTEGER NOT NULL"
-                                     ");";
-
-        executor->execute(createTableTag, {});
-    }
+        : oatpp::orm::DbClient(executor) {}
 
     QUERY(insertTag,
           "INSERT INTO qe_tag "

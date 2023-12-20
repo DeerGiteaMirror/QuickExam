@@ -9,10 +9,12 @@
 #include <components/SwaggerComponent.h>
 #include <controller/AnswerController.h>
 #include <controller/QuestionController.h>
+#include <controller/TagController.h>
 #include <iostream>
 #include <oatpp-swagger/Controller.hpp>
 #include <oatpp/core/base/CommandLineArguments.hpp>
 #include <oatpp/network/Server.hpp>
+#include <utils/Logger.h>
 
 void run(const oatpp::base::CommandLineArguments &args) {
     using namespace QuickExam::component;
@@ -23,14 +25,16 @@ void run(const oatpp::base::CommandLineArguments &args) {
 
     auto router = serviceComponent.httpRouter.getObject();
     using namespace QuickExam::controller;
-    auto answerController   = router->addController(AnswerController::make());
     auto questionController = router->addController(QuestionController::make());
+    auto answerController   = router->addController(AnswerController::make());
+    auto tagController      = router->addController(TagController::make());
 
 #ifndef NDEBUG
     // 把路由添加到 Swagger
     oatpp::web::server::api::Endpoints swaggerDocEndpoints;
-    swaggerDocEndpoints.append(answerController->getEndpoints());
     swaggerDocEndpoints.append(questionController->getEndpoints());
+    swaggerDocEndpoints.append(answerController->getEndpoints());
+    swaggerDocEndpoints.append(tagController->getEndpoints());
 
     router->addController(oatpp::swagger::Controller::createShared(swaggerDocEndpoints));
 #endif
@@ -41,6 +45,8 @@ void run(const oatpp::base::CommandLineArguments &args) {
     auto        connProv = serviceComponent.serverConnectionProvider.getObject();
     std::string port     = connProv->getProperty("port").toString()->c_str();
     std::string host     = connProv->getProperty("host").toString()->c_str();
+
+    LOGI("Server", "Listing on %s ...", (host + ":" + port).c_str());
 
     server.run();
 }

@@ -47,6 +47,21 @@ class Question : public oatpp::DTO {
     DTO_FIELD_INFO(score) {
         info->description = "Preset score";
     }
+
+    DTO_FIELD(Boolean, is_published) = false;
+    DTO_FIELD_INFO(is_published) {
+        info->description = "Is published (only published questions will be referenced in exams)";
+    }
+
+    DTO_FIELD(Int32, reference_count);
+    DTO_FIELD_INFO(reference_count) {
+        info->description = "Reference count";
+    }
+
+    DTO_FIELD(Int32, correct_count);
+    DTO_FIELD_INFO(correct_count) {
+        info->description = "Correct count";
+    }
 };
 
 class QuestionContents : public basic::Content {
@@ -55,25 +70,6 @@ class QuestionContents : public basic::Content {
     DTO_FIELD(Int32, question_id);
     DTO_FIELD_INFO(question_id) {
         info->description = "Question id";
-    }
-};
-
-class QuestionAnswers : public oatpp::DTO {
-    DTO_INIT(QuestionAnswers, DTO)
-
-    DTO_FIELD(Int32, id);
-    DTO_FIELD_INFO(id) {
-        info->description = "Map id";
-    }
-
-    DTO_FIELD(Int32, question_id);
-    DTO_FIELD_INFO(question_id) {
-        info->description = "Question id";
-    }
-
-    DTO_FIELD(Int32, answer_id);
-    DTO_FIELD_INFO(answer_id) {
-        info->description = "Answer id";
     }
 };
 
@@ -120,6 +116,6 @@ class QuestionTag : public oatpp::DTO {
     }
 };
 
-}  // namespace AnonExam::dto::db
+}  // namespace QuickExam::dto::db
 
 #include OATPP_CODEGEN_END(DTO)

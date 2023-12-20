@@ -19,7 +19,7 @@ public:
     OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>, m_objectMapper)
     ([] {
         auto mapper = oatpp::parser::json::mapping::ObjectMapper::createShared();
-        mapper->getSerializer()->getConfig()->useBeautifier = false;
+        mapper->getSerializer()->getConfig()->useBeautifier = true;
         mapper->getSerializer()->getConfig()->escapeFlags   = 0;
         return mapper;
     }());

@@ -8,5 +8,11 @@
     "password": "quickexam",
     "database": "quickexam"
   },
-  "swagger_ui": "../resource/swagger-ui"
+  "resource": "../resource",
+  "log": {
+    "save_path": "./logs",
+    "max_size_mb": 1,
+    "preserve_days": 30,
+    "debug": false
+  }
 }

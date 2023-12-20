@@ -22,6 +22,11 @@ class Answer : public oatpp::DTO {
         info->description = "Answer id";
     }
 
+    DTO_FIELD(Int32, question_id);
+    DTO_FIELD_INFO(question_id) {
+        info->description = "Belong to question id";
+    }
+
     DTO_FIELD(Boolean, is_correct) = false;
     DTO_FIELD_INFO(is_correct) {
         info->description = "Is correct answer";

@@ -32,7 +32,7 @@ public:
     OATPP_CREATE_COMPONENT(std::shared_ptr<oatpp::swagger::Resources>, swaggerResources)
     ([] {
         OATPP_COMPONENT(oatpp::Object<dto::Configuration>, config);
-        return oatpp::swagger::Resources::loadResources(config->swagger_ui);
+        return oatpp::swagger::Resources::loadResources(config->resource + "/swagger-ui");
     }());
 };
 }  // namespace QuickExam::component
