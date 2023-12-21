@@ -8,6 +8,7 @@
 #include <dto/Answer.h>
 #include <dto/QuestionContent.h>
 #include <dto/Tag.h>
+#include <dto/basic/Page.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>
 
@@ -18,26 +19,43 @@ namespace QuickExam::dto {
 class Question : public db::Question {
     DTO_INIT(Question, db::Question)
 
-    DTO_FIELD(List<Object<QuestionContent>>,
-              question_contents) = List<Object<QuestionContent>>::createShared();
+    DTO_FIELD(List<Object<QuestionContent>>, question_contents);
     DTO_FIELD_INFO(question_contents) {
         info->description = "Question contents";
     }
 
-    DTO_FIELD(List<Object<Question>>, sub_questions) = List<Object<Question>>::createShared();
+    DTO_FIELD(List<Object<Question>>, sub_questions);
     DTO_FIELD_INFO(sub_questions) {
         info->description = "Sub questions";
     }
 
-    DTO_FIELD(List<Object<Answer>>, answers) = List<Object<Answer>>::createShared();
+    DTO_FIELD(List<Object<Answer>>, answers);
     DTO_FIELD_INFO(answers) {
         info->description = "Question answers";
     }
 
-    DTO_FIELD(List<Object<Tag>>, tags) = List<Object<Tag>>::createShared();
+    DTO_FIELD(List<Object<Tag>>, tags);
     DTO_FIELD_INFO(tags) {
         info->description = "Question tags";
     }
+};
+
+class QuestionCondition : public basic::Condition {
+    DTO_INIT(QuestionCondition, basic::Condition)
+
+    DTO_FIELD(List<Int32>, tag_ids) = List<Int32>::createShared();
+    DTO_FIELD_INFO(tag_ids) {
+        info->description = "Question tags (empty means all tags)";
+    }
+
+    DTO_FIELD(List<Int32>, types) = List<Int32>::createShared();
+    DTO_FIELD_INFO(types) {
+        info->description = "Question types (empty means all types)";
+    }
+};
+
+class QuestionPage : public basic::Page<oatpp::Object<Question>> {
+    DTO_INIT(QuestionPage, basic::Page<oatpp::Object<Question>>)
 };
 
 }  // namespace QuickExam::dto

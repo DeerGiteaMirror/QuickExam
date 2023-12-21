@@ -12,10 +12,13 @@ FIND_PACKAGE(oatpp-postgresql REQUIRED)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src)
 
 FILE(GLOB_RECURSE UTILS_SRC ${CMAKE_SOURCE_DIR}/src/utils/*.cpp)
+FILE(GLOB_RECURSE SERVICE_SRC ${CMAKE_SOURCE_DIR}/src/service/*.cpp)
 
 ADD_EXECUTABLE(QuickExamBackend
         ${CMAKE_SOURCE_DIR}/src/QuickExamBackend.cpp
-        ${UTILS_SRC})
+        ${UTILS_SRC}
+        ${SERVICE_SRC}
+        )
 
 TARGET_LINK_LIBRARIES(QuickExamBackend
         PUBLIC oatpp::oatpp

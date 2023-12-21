@@ -92,8 +92,8 @@ class QuestionSubQuestions : public oatpp::DTO {
     }
 };
 
-class QuestionTag : public oatpp::DTO {
-    DTO_INIT(QuestionTag, DTO)
+class QuestionTags : public oatpp::DTO {
+    DTO_INIT(QuestionTags, DTO)
 
     DTO_FIELD(Int32, id);
     DTO_FIELD_INFO(id) {

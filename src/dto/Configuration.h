@@ -92,6 +92,11 @@ class Configuration : public oatpp::DTO {
         info->description = "Resource path";
     }
 
+    DTO_FIELD(String, swagger_host) = "localhost:8000";
+    DTO_FIELD_INFO(swagger_host) {
+        info->description = "Swagger host";
+    }
+
     DTO_FIELD(Object<Log>, log) = Log::createShared();
     DTO_FIELD_INFO(log) {
         info->description = "Log configuration";

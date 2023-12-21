@@ -29,6 +29,17 @@ ENUM(QuestionType,
      VALUE(long_answer, 4, "long-answer"),
      VALUE(file_upload, 5, "file-upload"))
 
+static oatpp::List<oatpp::Int32> allQuestionTypes() {
+    auto list = oatpp::List<oatpp::Int32>::createShared();
+    list->push_back(0);
+    list->push_back(1);
+    list->push_back(2);
+    list->push_back(3);
+    list->push_back(4);
+    list->push_back(5);
+    return list;
+}
+
 ENUM(CandidateStatus,
      v_int32,
      VALUE(notified, 0, "notified"),

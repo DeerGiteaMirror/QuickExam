@@ -9,10 +9,11 @@
     "database": "quickexam"
   },
   "resource": "../resource",
+  "swagger_host": "http://localhost:8280",
   "log": {
     "save_path": "./logs",
     "max_size_mb": 1,
     "preserve_days": 30,
-    "debug": false
+    "debug": true
   }
 }

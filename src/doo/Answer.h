@@ -35,7 +35,7 @@ public:
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::AnswerContents>, a))
 
-    QUERY(getAnswerByQuestionId,
+    QUERY(getAnswersByQuestionId,
           "SELECT "
           "* "
           "FROM qe_answer "

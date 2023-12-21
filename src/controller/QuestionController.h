@@ -8,10 +8,12 @@
 #include <dto/Question.h>
 #include <dto/QuestionContent.h>
 #include <dto/Tag.h>
+#include <dto/response/Question.h>
 #include <oatpp/core/macro/codegen.hpp>
 #include <oatpp/core/macro/component.hpp>
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
 #include <oatpp/web/server/api/ApiController.hpp>
+#include <service/QuestionService.h>
 
 #include OATPP_CODEGEN_BEGIN(ApiController)
 
@@ -33,6 +35,7 @@ public:
 
 private:
     std::shared_ptr<ObjectMapper> objectMapper;
+    service::QuestionService      question_service;
 
 public:
     ENDPOINT("POST", "/create", createQuestion, BODY_DTO(Object<dto::Question>, req_body)) {
@@ -152,10 +155,38 @@ public:
     }
     ENDPOINT_INFO(deleteQuesionContent) {
         info->addTag("Question");
-        info->summary     = "Delete Content";
-        info->description = "Delete a content";
-        info->pathParams.add<Int32>("content_id");
+        info->summary                                         = "Delete Content";
+        info->description                                     = "Delete a content";
+        info->pathParams.add<Int32>("content_id").description = "Content id";
+        info->pathParams.add<Int32>("content_id").required    = true;
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
+    }
+
+    ENDPOINT("GET", "/get/{question_id}", getQuestionById, PATH(Int32, question_id)) {
+        return createDtoResponse(Status::CODE_200, question_service.getQuestionById(question_id));
+    }
+    ENDPOINT_INFO(getQuestionById) {
+        info->addTag("Question");
+        info->summary                                          = "Get Question By Id";
+        info->description                                      = "Get a question by id";
+        info->pathParams.add<Int32>("question_id").description = "Question id";
+        info->pathParams.add<Int32>("question_id").required    = true;
+        info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
+    }
+
+    ENDPOINT("POST",
+             "/get/list/by/conditions",
+             getQuestions,
+             BODY_DTO(Object<dto::QuestionCondition>, req_body)) {
+        return createDtoResponse(Status::CODE_200,
+                                 question_service.getQuestionsByPageConditions(req_body));
+    }
+    ENDPOINT_INFO(getQuestions) {
+        info->addTag("Question");
+        info->summary     = "Get Questions";
+        info->description = "Get questions by page and size";
+        info->addConsumes<Object<dto::QuestionCondition>>("application/json");
+        info->addResponse<Object<dto::ResponseQuestionPage>>(Status::CODE_200, "application/json");
     }
 };
 

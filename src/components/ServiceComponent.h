@@ -5,6 +5,7 @@
 
 #pragma once
 
+#include <components/ErrorHandler.h>
 #include <dto/Configuration.h>
 #include <oatpp/core/macro/component.hpp>
 #include <oatpp/network/tcp/server/ConnectionProvider.hpp>
@@ -42,8 +43,9 @@ public:
                         router);        // get Router component
         OATPP_COMPONENT(std::shared_ptr<oatpp::data::mapping::ObjectMapper>,
                         objectMapper);  // get ObjectMapper component
-
-        return oatpp::web::server::HttpConnectionHandler::createShared(router);
+        auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
+        connectionHandler->setErrorHandler(std::make_shared<ErrorHandler>(objectMapper));
+        return connectionHandler;
     }());
 };
 }  // namespace QuickExam::component

@@ -4,17 +4,25 @@
 //
 
 #pragma once
+
+#include <dto/Question.h>
 #include <dto/db/Question.h>
 #include <oatpp-postgresql/orm.hpp>
+#include <utils/Logger.h>
 
 #include OATPP_CODEGEN_BEGIN(DbClient)
 
 namespace QuickExam::doo {
 
 class Question : public oatpp::orm::DbClient {
+private:
+    std::shared_ptr<oatpp::orm::Executor> m_executor;
+
 public:
     explicit Question(const std::shared_ptr<oatpp::orm::Executor> &executor)
-        : oatpp::orm::DbClient(executor) {}
+        : oatpp::orm::DbClient(executor) {
+        m_executor = executor;
+    }
 
     QUERY(insertQuestion,
           "INSERT INTO qe_question "
@@ -52,7 +60,7 @@ public:
           "(DEFAULT, :q.tag_id, :q.question_id, :q.priority) "
           "RETURNING id",
           PREPARE(true),
-          PARAM(oatpp::Object<dto::db::QuestionTag>, q))
+          PARAM(oatpp::Object<dto::db::QuestionTags>, q))
 
     QUERY(getQuestion,
           "SELECT "
@@ -152,6 +160,48 @@ public:
           "WHERE id = :q.id",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::QuestionContents>, q))
+
+    QUERY(getQuestionsByTagId,
+          "SELECT "
+          "* "
+          "FROM qe_question "
+          "WHERE id IN (SELECT question_id FROM qe_question_tag WHERE tag_id = :tag_id)",
+          PREPARE(true),
+          PARAM(oatpp::Int32, tag_id))
+
+    DEFINE_CONDITION_FUNC(const oatpp::Object<dto::QuestionCondition> &query) {
+        std::string sql = "WHERE 1 = 1 ";
+        if (!query->search->empty()) {
+            sql += "AND ";
+            sql += "id IN (SELECT question_id FROM qe_question_content WHERE content LIKE '%" +
+                   query->search + "%') ";
+        }
+        if (!query->types->empty()) {
+            sql += "AND ";
+            sql += "type IN (";
+            for (auto &type : *query->types) {
+                sql += std::to_string(type) + ", ";
+            }
+            sql.pop_back();
+            sql.pop_back();
+            sql += ") ";
+        }
+        if (!query->tag_ids->empty()) {
+            sql += "AND ";
+            sql += "id IN (SELECT question_id FROM qe_question_tag WHERE tag_id IN (";
+            for (auto &tag_id : *query->tag_ids) {
+                sql += std::to_string(tag_id) + ", ";
+            }
+            sql.pop_back();
+            sql.pop_back();
+            sql += ")) ";
+        }
+        return sql;
+    }
+
+    DEFINE_COUNT_QUERY("qe_question", dto::QuestionCondition)
+
+    DEFINE_PAGE_QUERY("qe_question", dto::QuestionCondition)
 };
 
 }  // namespace QuickExam::doo

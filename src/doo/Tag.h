@@ -60,6 +60,12 @@ public:
           "WHERE id = :t.id",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Tag>, t))
+
+    QUERY(getAllTagIds,
+          "SELECT "
+          "id "
+          "FROM qe_tag",
+          PREPARE(true))
 };
 
 }  // namespace QuickExam::doo

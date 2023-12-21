@@ -24,7 +24,7 @@ public:
             .setVersion("1.0")
             .addServer("http://" + config->host + ":" + std::to_string(config->port),
                        "server on web server")
-            .addServer("http://localhost:" + std::to_string(config->port), "server on localhost");
+            .addServer(config->swagger_host, "server on localhost");
 
         return builder.build();
     }());
