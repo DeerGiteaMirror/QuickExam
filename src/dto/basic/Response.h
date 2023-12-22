@@ -25,6 +25,13 @@
         throw oatpp::web::protocol::http::HttpError(Status::CODE_500, MSG);                        \
     }
 
+#define ASSERT_PRIVILEGE(COND, MSG)                                                                \
+    if (!(COND)) {                                                                                 \
+        LOGE("Privilege Error", "%s", MSG);                                                        \
+        using namespace oatpp::web::protocol::http;                                                \
+        throw oatpp::web::protocol::http::HttpError(Status::CODE_403, MSG);                        \
+    }
+
 #define ASSERT_EXIST(COND, MSG)                                                                    \
     if (!(COND)) {                                                                                 \
         LOGE("Not Found", "%s", MSG);                                                              \

@@ -17,7 +17,7 @@
         sql += "COUNT(*) AS total_count ";                                                         \
         sql += "FROM " TABLE_NAME " ";                                                             \
         sql += conditionSqlString(query) + ";";                                                    \
-        LOGD("QuestionDOO", "getQuestionsByConditionPageCount %s", sql.c_str());                   \
+        LOGD("DEFINE_COUNT_QUERY", "Sql %s", sql.c_str());                                         \
         return m_executor->execute(sql, {});                                                       \
     }
 
@@ -33,7 +33,7 @@
         sql += "ORDER BY " + query->sort_by + " " + query->sort_order + " ";                       \
         sql += "OFFSET " + offset + " ";                                                           \
         sql += "LIMIT " + limit + ";";                                                             \
-        LOGD("QuestionDOO", "getQuestionsByConditionInPage %s", sql.c_str());                      \
+        LOGD("DEFINE_PAGE_QUERY", "Sql %s", sql.c_str());                                          \
         return m_executor->execute(sql, {});                                                       \
     }
 

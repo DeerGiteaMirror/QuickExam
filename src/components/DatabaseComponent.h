@@ -7,6 +7,7 @@
 
 #include <doo/Answer.h>
 #include <doo/Migration.h>
+#include <doo/OperateTime.h>
 #include <doo/Question.h>
 #include <doo/Tag.h>
 #include <dto/Configuration.h>
@@ -38,6 +39,12 @@ public:
     ([] {
         CREATE_EXECUTOR
         return std::make_shared<doo::Migration>(executor);
+    }());
+
+    OATPP_CREATE_COMPONENT(std::shared_ptr<doo::OperateTime>, operate_time_doo)
+    ([] {
+        CREATE_EXECUTOR
+        return std::make_shared<doo::OperateTime>(executor);
     }());
 
     OATPP_CREATE_COMPONENT(std::shared_ptr<doo::Tag>, tag_doo)

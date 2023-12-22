@@ -34,6 +34,7 @@ private:
 
 public:
     ENDPOINT("POST", "/create", createAnswer, BODY_DTO(Object<dto::Answer>, request)) {
+        // todo: create answer
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(createAnswer) {
@@ -49,6 +50,7 @@ public:
              addAnswerContent,
              PATH(Int32, question_id),
              BODY_DTO(Object<dto::AnswerContent>, req_body)) {
+        // todo: create answer content
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(addAnswerContent) {
@@ -60,6 +62,7 @@ public:
     }
 
     ENDPOINT("PUT", "/update", updateAnswer, BODY_DTO(Object<dto::Answer>, req_body)) {
+        // todo: update answer
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(updateAnswer) {
@@ -74,6 +77,7 @@ public:
              "/update/content",
              updateAnswerContent,
              BODY_DTO(Object<dto::AnswerContent>, req_body)) {
+        // todo: update answer content
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(updateAnswerContent) {
@@ -85,6 +89,7 @@ public:
     }
 
     ENDPOINT("DELETE", "/delete/{answer_id}", deleteAnswer, PATH(Int32, answer_id)) {
+        // todo: delete answer
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(deleteAnswer) {
@@ -99,6 +104,7 @@ public:
              "/delete/content/{content_id}",
              deleteAnswerContent,
              PATH(Int32, content_id)) {
+        // todo: delete answer content
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(deleteAnswerContent) {

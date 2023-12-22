@@ -8,6 +8,7 @@
 #include <dto/Answer.h>
 #include <dto/QuestionContent.h>
 #include <dto/Tag.h>
+#include <dto/basic/OperateTime.h>
 #include <dto/basic/Page.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>
@@ -37,6 +38,11 @@ class Question : public db::Question {
     DTO_FIELD(List<Object<Tag>>, tags);
     DTO_FIELD_INFO(tags) {
         info->description = "Question tags";
+    }
+
+    DTO_FIELD(Object<basic::OperateTime>, operate_time);
+    DTO_FIELD_INFO(operate_time) {
+        info->description = "Question operate time";
     }
 };
 

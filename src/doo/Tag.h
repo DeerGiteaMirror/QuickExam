@@ -5,17 +5,17 @@
 
 #pragma once
 
+#include <doo/Basic.h>
+#include <dto/Tag.h>
 #include <dto/db/Tag.h>
-#include <oatpp-postgresql/orm.hpp>
 
 #include OATPP_CODEGEN_BEGIN(DbClient)
 
 namespace QuickExam::doo {
 
-class Tag : public oatpp::orm::DbClient {
+class Tag : public Basic {
 public:
-    explicit Tag(const std::shared_ptr<oatpp::orm::Executor> &executor)
-        : oatpp::orm::DbClient(executor) {}
+    explicit Tag(const std::shared_ptr<oatpp::orm::Executor> &executor) : Basic(executor) {}
 
     QUERY(insertTag,
           "INSERT INTO qe_tag "
@@ -28,25 +28,11 @@ public:
 
     QUERY(getTag,
           "SELECT "
-          "* "
+          "id, name, hex_color "
           "FROM qe_tag "
           "WHERE id = :id",
           PREPARE(true),
           PARAM(oatpp::Int32, id))
-
-    QUERY(getAllTags,
-          "SELECT "
-          "* "
-          "FROM qe_tag",
-          PREPARE(true))
-
-    QUERY(getTagByName,
-          "SELECT "
-          "* "
-          "FROM qe_tag "
-          "WHERE name = :name",
-          PREPARE(true),
-          PARAM(oatpp::String, name))
 
     QUERY(deleteTag,
           "DELETE FROM qe_tag "
@@ -57,7 +43,8 @@ public:
     QUERY(updateTag,
           "UPDATE qe_tag "
           "SET name = :t.name, hex_color = :t.hex_color "
-          "WHERE id = :t.id",
+          "WHERE id = :t.id "
+          "RETURNING id, name, hex_color",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Tag>, t))
 
@@ -66,6 +53,20 @@ public:
           "id "
           "FROM qe_tag",
           PREPARE(true))
+
+    DEFINE_CONDITION_FUNC(const oatpp::Object<dto::TagCondition> &query) {
+        std::string sql = "WHERE 1 = 1 ";
+        if (!query->search->empty()) {
+            sql += "AND ";
+            sql += "id IN (SELECT question_id FROM qe_question_content WHERE content LIKE '%" +
+                   query->search + "%') ";
+        }
+        return sql;
+    }
+
+    DEFINE_COUNT_QUERY("qe_tag", dto::TagCondition)
+
+    DEFINE_PAGE_QUERY("qe_tag", dto::TagCondition)
 };
 
 }  // namespace QuickExam::doo

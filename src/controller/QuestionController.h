@@ -39,28 +39,29 @@ private:
 
 public:
     ENDPOINT("POST", "/create", createQuestion, BODY_DTO(Object<dto::Question>, req_body)) {
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200, question_service.createQuestion(req_body));
     }
     ENDPOINT_INFO(createQuestion) {
         info->addTag("Question");
         info->summary     = "Create Question";
         info->description = "Create a question";
         info->addConsumes<Object<dto::Question>>("application/json");
-        info->addResponse<Object<dto::Question>>(Status::CODE_200, "application/json");
+        info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
 
     ENDPOINT("POST",
              "/create/content",
              addQuestionContent,
              BODY_DTO(Object<dto::QuestionContent>, req_body)) {
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200, question_service.addQuestionContent(req_body));
     }
     ENDPOINT_INFO(addQuestionContent) {
         info->addTag("Question");
         info->summary     = "Add Content";
         info->description = "Create a content for a question";
         info->addConsumes<Object<dto::QuestionContent>>("application/json");
-        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+        info->addResponse<Object<dto::ResponseQuestionContents>>(Status::CODE_200,
+                                                                 "application/json");
     }
 
     ENDPOINT("POST",
@@ -68,6 +69,7 @@ public:
              addSubQuestion,
              PATH(Int32, question_id),
              BODY_DTO(Object<dto::Question>, req_body)) {
+        // todo: add sub question
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(addSubQuestion) {
@@ -84,6 +86,7 @@ public:
              addQuestionTag,
              PATH(Int32, question_id),
              PATH(Int32, tag_id)) {
+        // todo: add tag
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(addQuestionTag) {
@@ -96,28 +99,30 @@ public:
     }
 
     ENDPOINT("PUT", "/update", updateQuestion, BODY_DTO(Object<dto::Question>, req_body)) {
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200, question_service.updateQuestion(req_body));
     }
     ENDPOINT_INFO(updateQuestion) {
         info->addTag("Question");
         info->summary     = "Update Question";
         info->description = "Update a question";
         info->addConsumes<Object<dto::Question>>("application/json");
-        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+        info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
 
     ENDPOINT("PUT",
              "/update/content",
              updateQuestionContent,
              BODY_DTO(Object<dto::QuestionContent>, req_body)) {
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200,
+                                 question_service.updateQuestionContent(req_body));
     }
     ENDPOINT_INFO(updateQuestionContent) {
         info->addTag("Question");
         info->summary     = "Update Content";
         info->description = "Update a content";
         info->addConsumes<Object<dto::QuestionContent>>("application/json");
-        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+        info->addResponse<Object<dto::ResponseQuestionContent>>(Status::CODE_200,
+                                                                "application/json");
     }
 
     ENDPOINT("DELETE",
@@ -125,6 +130,7 @@ public:
              deleteQuestionTag,
              PATH(Int32, question_id),
              PATH(Int32, tag_id)) {
+        // todo: delete tag
         return createResponse(Status::CODE_200);
     }
     ENDPOINT_INFO(deleteQuestionTag) {
@@ -137,29 +143,33 @@ public:
     }
 
     ENDPOINT("DELETE", "/delete/{question_id}", deleteQuestion, PATH(Int32, question_id)) {
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200, question_service.deleteQuestion(question_id));
     }
     ENDPOINT_INFO(deleteQuestion) {
         info->addTag("Question");
         info->summary     = "Delete Question";
         info->description = "Delete a question";
         info->pathParams.add<Int32>("question_id");
-        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+        info->addResponse<Object<dto::basic::Response<String>>>(Status::CODE_200,
+                                                                "application/json");
     }
 
     ENDPOINT("DELETE",
              "/delete/content/{content_id}",
              deleteQuesionContent,
              PATH(Int32, content_id)) {
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200,
+                                 question_service.deleteQuestionContent(content_id));
     }
     ENDPOINT_INFO(deleteQuesionContent) {
         info->addTag("Question");
-        info->summary                                         = "Delete Content";
-        info->description                                     = "Delete a content";
+        info->summary     = "Delete Content";
+        info->description = "Delete a content, will return full "
+                            "question contents list for display";
         info->pathParams.add<Int32>("content_id").description = "Content id";
         info->pathParams.add<Int32>("content_id").required    = true;
-        info->addResponse(Status::CODE_200, "Success, then re-get the question");
+        info->addResponse<Object<dto::ResponseQuestionContents>>(Status::CODE_200,
+                                                                 "application/json");
     }
 
     ENDPOINT("GET", "/get/{question_id}", getQuestionById, PATH(Int32, question_id)) {
@@ -184,7 +194,8 @@ public:
     ENDPOINT_INFO(getQuestions) {
         info->addTag("Question");
         info->summary     = "Get Questions";
-        info->description = "Get questions by page and size";
+        info->description = "Get questions basic info (but have tags) by conditions. "
+                            "This will not return append info like contents, answers, etc.";
         info->addConsumes<Object<dto::QuestionCondition>>("application/json");
         info->addResponse<Object<dto::ResponseQuestionPage>>(Status::CODE_200, "application/json");
     }

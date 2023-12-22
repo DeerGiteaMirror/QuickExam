@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS qe_question
     score              INTEGER NOT NULL,
     is_published       BOOLEAN NOT NULL DEFAULT FALSE,
     reference_count    INTEGER NOT NULL DEFAULT 0,
-    correct_count      REAL    NOT NULL DEFAULT 0
+    correct_count INTEGER NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS qe_question_content
@@ -32,9 +32,10 @@ CREATE TABLE IF NOT EXISTS qe_question_content
 
 CREATE TABLE IF NOT EXISTS qe_question_sub_questions
 (
-    id              SERIAL PRIMARY KEY,
-    sub_question_id INTEGER NOT NULL,
-    question_id     INTEGER NOT NULL,
+    id                 SERIAL PRIMARY KEY,
+    sub_question_id    INTEGER NOT NULL,
+    question_id        INTEGER NOT NULL,
+    sub_question_index INTEGER NOT NULL,
     FOREIGN KEY (sub_question_id) REFERENCES qe_question (id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES qe_question (id) ON DELETE CASCADE
 );

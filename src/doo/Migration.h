@@ -24,6 +24,7 @@ public:
         oatpp::orm::SchemaMigration migration(executor);
 
         migration.addFile(1, migration_path + "/001_init.sql");
+        migration.addFile(2, migration_path + "/002_question_create_time.sql");
         // TODO - Add more migrations here.
         migration.migrate();
 

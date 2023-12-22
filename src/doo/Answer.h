@@ -5,17 +5,16 @@
 
 #pragma once
 
+#include <doo/Basic.h>
 #include <dto/db/Answer.h>
-#include <oatpp-postgresql/orm.hpp>
 
 #include OATPP_CODEGEN_BEGIN(DbClient)
 
 namespace QuickExam::doo {
 
-class Answer : public oatpp::orm::DbClient {
+class Answer : public Basic {
 public:
-    explicit Answer(const std::shared_ptr<oatpp::orm::Executor> &executor)
-        : oatpp::orm::DbClient(executor) {}
+    explicit Answer(const std::shared_ptr<oatpp::orm::Executor> &executor) : Basic(executor) {}
 
     QUERY(insertAnswer,
           "INSERT INTO qe_answer "

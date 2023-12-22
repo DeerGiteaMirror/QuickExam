@@ -5,24 +5,18 @@
 
 #pragma once
 
+#include <doo/Basic.h>
 #include <dto/Question.h>
 #include <dto/db/Question.h>
-#include <oatpp-postgresql/orm.hpp>
 #include <utils/Logger.h>
 
 #include OATPP_CODEGEN_BEGIN(DbClient)
 
 namespace QuickExam::doo {
 
-class Question : public oatpp::orm::DbClient {
-private:
-    std::shared_ptr<oatpp::orm::Executor> m_executor;
-
+class Question : public Basic {
 public:
-    explicit Question(const std::shared_ptr<oatpp::orm::Executor> &executor)
-        : oatpp::orm::DbClient(executor) {
-        m_executor = executor;
-    }
+    explicit Question(const std::shared_ptr<oatpp::orm::Executor> &executor) : Basic(executor) {}
 
     QUERY(insertQuestion,
           "INSERT INTO qe_question "
@@ -31,7 +25,8 @@ public:
           "VALUES "
           "(DEFAULT, :q.is_sub_question, :q.title, :q.type, :q.estimated_time_sec, :q.score, "
           ":q.is_published, :q.reference_count, :q.correct_count) "
-          "RETURNING id",
+          "RETURNING id, is_sub_question, title, type, estimated_time_sec, score, "
+          "is_published, reference_count, correct_count",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Question>, q))
 
@@ -40,7 +35,7 @@ public:
           "(id, content_type, content, content_index, question_id) "
           "VALUES "
           "(DEFAULT, :q.content_type, :q.content, :q.content_index, :q.question_id) "
-          "RETURNING id",
+          "RETURNING id, content_type, content, content_index, question_id",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::QuestionContents>, q))
 
@@ -49,7 +44,7 @@ public:
           "(id, sub_question_id, question_id) "
           "VALUES "
           "(DEFAULT, :q.sub_question_id, :q.question_id) "
-          "RETURNING id",
+          "RETURNING id, sub_question_id, question_id",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::QuestionSubQuestions>, q))
 
@@ -58,7 +53,7 @@ public:
           "(id, tag_id, question_id, priority) "
           "VALUES "
           "(DEFAULT, :q.tag_id, :q.question_id, :q.priority) "
-          "RETURNING id",
+          "RETURNING id, tag_id, question_id, priority",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::QuestionTags>, q))
 
@@ -96,7 +91,7 @@ public:
 
     QUERY(getQuestionTagsIdByQuestionId,
           "SELECT "
-          "* "
+          "id, tag_id, question_id, priority "
           "FROM qe_question_tag "
           "WHERE question_id = :question_id",
           PREPARE(true),
@@ -147,7 +142,9 @@ public:
           "is_published = :q.is_published, "
           "reference_count = :q.reference_count, "
           "correct_count = :q.correct_count "
-          "WHERE id = :q.id",
+          "WHERE id = :q.id "
+          "RETURNING id, is_sub_question, title, type, estimated_time_sec, score, "
+          "is_published, reference_count, correct_count",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Question>, q))
 
@@ -157,7 +154,8 @@ public:
           "content_type = :q.content_type, "
           "content = :q.content, "
           "content_index = :q.content_index "
-          "WHERE id = :q.id",
+          "WHERE id = :q.id "
+          "RETURNING id, content_type, content, content_index, question_id",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::QuestionContents>, q))
 

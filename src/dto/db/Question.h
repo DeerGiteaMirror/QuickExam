@@ -90,6 +90,11 @@ class QuestionSubQuestions : public oatpp::DTO {
     DTO_FIELD_INFO(sub_question_id) {
         info->description = "Sub question id";
     }
+
+    DTO_FIELD(Int32, sub_question_index);
+    DTO_FIELD_INFO(sub_question_index) {
+        info->description = "Sub question index";
+    }
 };
 
 class QuestionTags : public oatpp::DTO {
