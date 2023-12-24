@@ -24,7 +24,7 @@ public:
 public:
     OATPP_CREATE_COMPONENT(oatpp::Object<dto::Configuration>, config)
     ([this] {
-        const char *configPath = m_cmdArgs.getNamedArgumentValue("--profile", "./config.json");
+        const char *configPath = m_cmdArgs.getNamedArgumentValue("--profile", "../resource/config.json");
 
         oatpp::String configText = oatpp::String::loadFromFile(configPath);
         if (configText == nullptr) {
