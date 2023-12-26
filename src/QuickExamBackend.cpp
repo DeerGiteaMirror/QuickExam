@@ -7,7 +7,9 @@
 #include <components/DatabaseComponent.h>
 #include <components/ServiceComponent.h>
 #include <components/SwaggerComponent.h>
+#include <controller/AnswerContentController.h>
 #include <controller/AnswerController.h>
+#include <controller/QuestionContentController.h>
 #include <controller/QuestionController.h>
 #include <controller/TagController.h>
 #include <iostream>
@@ -25,15 +27,19 @@ void run(const oatpp::base::CommandLineArguments &args) {
 
     auto router = serviceComponent.httpRouter.getObject();
     using namespace QuickExam::controller;
-    auto questionController = router->addController(QuestionController::make());
-    auto answerController   = router->addController(AnswerController::make());
-    auto tagController      = router->addController(TagController::make());
+    auto questionController        = router->addController(QuestionController::make());
+    auto questionContentController = router->addController(QuestionContentController::make());
+    auto answerController          = router->addController(AnswerController::make());
+    auto answerContentController   = router->addController(AnswerContentController::make());
+    auto tagController             = router->addController(TagController::make());
 
 #ifndef NDEBUG
     // 把路由添加到 Swagger
     oatpp::web::server::api::Endpoints swaggerDocEndpoints;
     swaggerDocEndpoints.append(questionController->getEndpoints());
+    swaggerDocEndpoints.append(questionContentController->getEndpoints());
     swaggerDocEndpoints.append(answerController->getEndpoints());
+    swaggerDocEndpoints.append(answerContentController->getEndpoints());
     swaggerDocEndpoints.append(tagController->getEndpoints());
 
     router->addController(oatpp::swagger::Controller::createShared(swaggerDocEndpoints));

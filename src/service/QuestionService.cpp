@@ -11,8 +11,10 @@ Object<dto::ResponseQuestionPage>
 QuestionService::getQuestionsByPageConditions(const Object<dto::QuestionCondition> &conditions) {
     auto page_data = dto::QuestionPage::createShared();
     GET_PAGE(question_doo, conditions, page_data, dto::Question);
+    // get tags for extra
     for (auto &question : *page_data->items) {
-        question->tags = getQuestionTags(question->id);
+        question->tags         = m_tag_service.getTagsByQuestion(question->id);
+        question->operate_time = getOperateTime(operate_time_table_name, question->id);
     }
     auto response  = dto::ResponseQuestionPage::createShared();
     response->data = page_data;
@@ -23,9 +25,9 @@ Object<dto::Question> QuestionService::getQuestionDetails(const Object<dto::Ques
     // get contents
     question->question_contents = getQuestionContents(question->id);
     // get answers
-    question->answers = getQuestionAnswers(question->id);
+    question->answers = m_answer_service.getAnswerListByQuestionId(question->id);
     // get tags
-    question->tags = getQuestionTags(question->id);
+    question->tags = m_tag_service.getTagsByQuestion(question->id);
     // get sub questions
     question->sub_questions = getSubQuestions(question->id);
     // get operate time
@@ -67,10 +69,10 @@ QuestionService::updateQuestion(const Object<dto::Question> &question) {
     RETURN_STATUS_SUCCESS(response);
 }
 
-Object<dto::basic::Response<String>> QuestionService::deleteQuestion(const Int32 &id) {
+Object<dto::Response> QuestionService::deleteQuestion(const Int32 &id) {
     auto db_res = question_doo->deleteQuestion(id);
     ASSERT_DB(db_res);
-    auto response  = dto::basic::Response<String>::createShared();
+    auto response  = dto::Response::createShared();
     response->data = "Delete question id: " + std::to_string(id) + " success";
     RETURN_STATUS_SUCCESS(response);
 }
@@ -81,22 +83,6 @@ List<Object<dto::QuestionContent>> QuestionService::getQuestionContents(const In
     IF_DB_ERROR(return_list);
     return_list = db_res->fetch<List<Object<dto::QuestionContent>>>();
     return return_list;
-}
-
-List<Object<dto::Tag>> QuestionService::getQuestionTags(const Int32 &question_id) {
-    auto return_list = List<Object<dto::Tag>>::createShared();
-    auto db_res      = question_doo->getQuestionTagsIdByQuestionId(question_id);
-    IF_DB_ERROR(List<Object<dto::Tag>>::createShared());
-    auto tags_id = db_res->fetch<List<Object<dto::db::QuestionTags>>>();
-    for (auto &tag_id : *tags_id) {
-        auto tag = m_tag_service.getTagById(tag_id->tag_id);
-        return_list->push_back(tag);
-    }
-    return return_list;
-}
-
-List<Object<dto::Answer>> QuestionService::getQuestionAnswers(const Int32 &question_id) {
-    return m_answer_service.getAnswersByQuestionId(question_id);
 }
 
 List<Object<dto::Question>> QuestionService::getSubQuestions(const Int32 &question_id) {
@@ -117,20 +103,21 @@ List<Object<dto::Question>> QuestionService::getSubQuestions(const Int32 &questi
     return return_list;
 }
 
-Object<dto::ResponseQuestionContents>
+Object<dto::ResponseQuestionContent>
 QuestionService::addQuestionContent(const Object<QuestionContent> &content) {
     auto db_res = question_doo->insertQuestionContent(content);
     ASSERT_DB(db_res);
-    auto response  = dto::ResponseQuestionContents::createShared();
-    response->data = getQuestionContents(content->question_id);
+    auto data = dto::QuestionContent::createShared();
+    FETCH_SINGLE(db_res, dto::QuestionContent, data);
+    auto response  = dto::ResponseQuestionContent::createShared();
+    response->data = data;
     RETURN_STATUS_SUCCESS(response);
 }
 
-Object<dto::ResponseQuestionContents> QuestionService::deleteQuestionContent(const Int32 &id) {
+Object<dto::Response> QuestionService::deleteQuestionContent(const Int32 &id) {
     auto db_res = question_doo->deleteQuestionContent(id);
     ASSERT_DB(db_res);
-    auto response  = dto::ResponseQuestionContents::createShared();
-    response->data = getQuestionContents(id);
+    auto response = dto::Response::createShared();
     RETURN_STATUS_SUCCESS(response);
 }
 
@@ -149,6 +136,16 @@ Object<dto::QuestionContent> QuestionService::getQuestionContent(const Int32 &co
     auto return_content = dto::QuestionContent::createShared();
     FETCH_SINGLE(db_res, dto::QuestionContent, return_content);
     return return_content;
+}
+
+Object<dto::ResponseQuestionContents>
+QuestionService::getQuestionContentsByQuestionId(const Int32 &question_id) {
+    auto db_res = question_doo->getQuestionContentsByQuestionId(question_id);
+    ASSERT_DB(db_res);
+    auto return_list = db_res->fetch<List<Object<dto::QuestionContent>>>();
+    auto response    = dto::ResponseQuestionContents::createShared();
+    response->data   = return_list;
+    RETURN_STATUS_SUCCESS(response);
 }
 
 }  // namespace QuickExam::service

@@ -12,6 +12,7 @@
 #include <dto/basic/Enmus.h>
 #include <dto/basic/Response.h>
 #include <dto/response/Question.h>
+#include <dto/response/QuestionContent.h>
 #include <service/AnswerService.h>
 #include <service/BasicService.h>
 #include <service/TagService.h>
@@ -33,7 +34,7 @@ public:
     QuestionService()  = default;
     ~QuestionService() = default;
 
-public:  // ---> Controller methods
+public:  // ---> Controller methods (Question)
     Object<dto::ResponseQuestionPage>
     getQuestionsByPageConditions(const Object<dto::QuestionCondition> &page_conditions);
 
@@ -43,16 +44,21 @@ public:  // ---> Controller methods
 
     Object<dto::ResponseQuestion> updateQuestion(const Object<dto::Question> &question);
 
-    Object<dto::basic::Response<String>> deleteQuestion(const Int32 &id);
+    Object<dto::Response> deleteQuestion(const Int32 &id);
 
-    Object<dto::ResponseQuestionContents>
+public:  // ---> Controller methods (Content)
+    Object<dto::ResponseQuestionContent>
     addQuestionContent(const Object<dto::QuestionContent> &content);
 
-    Object<dto::ResponseQuestionContents> deleteQuestionContent(const Int32 &id);
+    Object<dto::ResponseQuestionContents> getQuestionContentsByQuestionId(const Int32 &question_id);
+
+    Object<dto::Response> deleteQuestionContent(const Int32 &id);
 
     Object<dto::ResponseQuestionContent>
     updateQuestionContent(const Object<dto::QuestionContent> &content);
 
+public:  // ---> Controller methods (Tag)
+public:  // ---> Controller methods (Sub Question)
 public:  // ---> Service methods
     /**
      * @brief Get the Question Details object
@@ -68,20 +74,6 @@ public:  // ---> Service methods
      */
     List<Object<dto::QuestionContent>> getQuestionContents(const Int32 &question_id);
     Object<dto::QuestionContent>       getQuestionContent(const Int32 &content_id);
-
-    /**
-     * @brief Get the Question Tags object
-     * @param question_id The question id
-     * @return List<Object<dto::Tag>> The question tags list
-     */
-    List<Object<dto::Tag>> getQuestionTags(const Int32 &question_id);
-
-    /**
-     * @brief Get the Question Answers object (with answer contents)
-     * @param question_id The question id
-     * @return  List<Object<dto::Answer>> The question answers list
-     */
-    List<Object<dto::Answer>> getQuestionAnswers(const Int32 &question_id);
 
     /**
      * @brief Get the Sub Questions object (with details)

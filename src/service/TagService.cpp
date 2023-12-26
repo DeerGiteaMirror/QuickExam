@@ -50,4 +50,16 @@ Object<dto::ResponseTag> TagService::createTag(const Object<Tag> &tag) {
     response->data = data;
     RETURN_STATUS_SUCCESS(response);
 }
+
+List<Object<Tag>> TagService::getTagsByQuestion(const Int32 &question_id) {
+    auto return_list = List<Object<dto::Tag>>::createShared();
+    auto db_res      = question_doo->getQuestionTagsIdByQuestionId(question_id);
+    IF_DB_ERROR(List<Object<dto::Tag>>::createShared());
+    auto tags_id = db_res->fetch<List<Object<dto::db::QuestionTags>>>();
+    for (auto &tag_id : *tags_id) {
+        auto tag = getTagById(tag_id->tag_id);
+        return_list->push_back(tag);
+    }
+    return return_list;
+}
 }  // namespace QuickExam::service

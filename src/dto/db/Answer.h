@@ -38,7 +38,7 @@ class AnswerContents : public basic::Content {
 
     DTO_FIELD(Int32, answer_id);
     DTO_FIELD_INFO(answer_id) {
-        info->description = "Answer id";
+        info->description = "Belong to answer id";
     }
 };
 

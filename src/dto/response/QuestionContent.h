@@ -16,12 +16,12 @@
 namespace QuickExam::dto {
 
 using namespace oatpp;
-class ResponseQuestion : public basic::Response<Object<dto::Question>> {
-    DTO_INIT(ResponseQuestion, basic::Response<Object<dto::Question>>)
+class ResponseQuestionContents : public basic::Response<List<Object<dto::QuestionContent>>> {
+    DTO_INIT(ResponseQuestionContents, basic::Response<List<Object<dto::QuestionContent>>>)
 };
 
-class ResponseQuestionPage : public basic::Response<Object<dto::QuestionPage>> {
-    DTO_INIT(ResponseQuestionPage, basic::Response<Object<dto::QuestionPage>>)
+class ResponseQuestionContent : public basic::Response<Object<dto::QuestionContent>> {
+    DTO_INIT(ResponseQuestionContent, basic::Response<Object<dto::QuestionContent>>)
 };
 
 }  // namespace QuickExam::dto

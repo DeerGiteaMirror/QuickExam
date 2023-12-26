@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include <dto/basic/Response.h>
+#include <dto/response/Response.h>
 #include <oatpp/web/protocol/http/outgoing/ResponseFactory.hpp>
 #include <oatpp/web/server/handler/ErrorHandler.hpp>
 #include <utils/Logger.h>
@@ -25,9 +25,10 @@ public:
     std::shared_ptr<OutgoingResponse> handleError(const Status        &status,
                                                   const oatpp::String &message,
                                                   const Headers       &headers) override {
-        auto error     = dto::basic::Response<oatpp::String>::createShared();
+        auto error     = dto::Response::createShared();
         error->code    = status.code;
         error->message = message;
+        error->data    = message;
         auto response  = ResponseFactory::createResponse(Status::CODE_200, error, m_objectMapper);
         for (const auto &pair : headers.getAll()) {
             response->putHeader(pair.first.toString(), pair.second.toString());

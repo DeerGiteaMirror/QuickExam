@@ -6,6 +6,7 @@
 #pragma once
 
 #include <dto/AnswerContent.h>
+#include <dto/basic/Response.h>
 #include <dto/db/Answer.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>

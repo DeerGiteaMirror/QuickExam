@@ -8,6 +8,7 @@
 #include <doo/OperateTime.h>
 #include <dto/basic/OperateTime.h>
 #include <dto/basic/Response.h>
+#include <dto/response/Response.h>
 #include <oatpp/core/macro/component.hpp>
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
 #include <utils/Database.h>
