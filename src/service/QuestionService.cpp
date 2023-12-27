@@ -13,8 +13,7 @@ QuestionService::getQuestionsByPageConditions(const Object<dto::QuestionConditio
     GET_PAGE(question_doo, conditions, page_data, dto::Question);
     // get tags for extra
     for (auto &question : *page_data->items) {
-        question->tags         = m_tag_service.getTagsByQuestion(question->id);
-        question->operate_time = getOperateTime(operate_time_table_name, question->id);
+        question->tags = m_tag_service.getTagsByQuestion(question->id);
     }
     auto response  = dto::ResponseQuestionPage::createShared();
     response->data = page_data;
@@ -30,8 +29,6 @@ Object<dto::Question> QuestionService::getQuestionDetails(const Object<dto::Ques
     question->tags = m_tag_service.getTagsByQuestion(question->id);
     // get sub questions
     question->sub_questions = getSubQuestions(question->id);
-    // get operate time
-    question->operate_time = getOperateTime(operate_time_table_name, question->id);
     return question;
 }
 
@@ -53,9 +50,8 @@ QuestionService::createQuestion(const Object<dto::Question> &question) {
     ASSERT_DB(db_res);
     auto data = dto::Question::createShared();
     FETCH_SINGLE(db_res, dto::Question, data);
-    data->operate_time = createOperateTime(operate_time_table_name, data->id);
-    auto response      = dto::ResponseQuestion::createShared();
-    response->data     = data;
+    auto response  = dto::ResponseQuestion::createShared();
+    response->data = data;
     RETURN_STATUS_SUCCESS(response);
 }
 
@@ -63,7 +59,6 @@ Object<dto::ResponseQuestion>
 QuestionService::updateQuestion(const Object<dto::Question> &question) {
     auto db_res = question_doo->updateQuestion(question);
     ASSERT_DB(db_res);
-    updateOperateTime(operate_time_table_name, question->id);
     auto response  = dto::ResponseQuestion::createShared();
     response->data = getQuestionDetails(question);
     RETURN_STATUS_SUCCESS(response);

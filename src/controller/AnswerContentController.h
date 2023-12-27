@@ -46,7 +46,6 @@ public:
         info->addConsumes<Object<dto::AnswerContent>>("application/json");
         info->addResponse<Object<dto::ResponseAnswerContent>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(addAnswerContent)
 
     ENDPOINT("PUT",
              "/update",
@@ -61,7 +60,6 @@ public:
         info->addConsumes<Object<dto::AnswerContent>>("application/json");
         info->addResponse<Object<dto::ResponseAnswerContent>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(updateAnswerContent)
 
     ENDPOINT("DELETE", "/delete", deleteAnswerContent, QUERY(Int32, content_id)) {
         return createDtoResponse(Status::CODE_200, answer_service.deleteAnswerContent(content_id));
@@ -75,7 +73,6 @@ public:
         info->queryParams.add<Int32>("content_id").required    = true;
         info->addResponse<Object<dto::Response>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(deleteAnswerContent)
 
     ENDPOINT("GET", "/get/list/by/answer", getAnswerContentsByAnswerId, QUERY(Int32, answer_id)) {
         return createDtoResponse(Status::CODE_200,
@@ -91,7 +88,6 @@ public:
         info->addResponse<Object<dto::ResponseAnswerContents>>(Status::CODE_200,
                                                                "application/json");
     }
-    ADD_CORS(getAnswerContentsByAnswerId)
 };
 
 }  // namespace QuickExam::controller

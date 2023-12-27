@@ -48,7 +48,6 @@ public:
         info->addConsumes<Object<dto::Question>>("application/json");
         info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(createQuestion)
 
     ENDPOINT("POST", "/add/tag", addQuestionTag, QUERY(Int32, question_id), QUERY(Int32, tag_id)) {
         // todo: add tag
@@ -66,7 +65,6 @@ public:
         info->queryParams.add<Int32>("tag_id").required         = true;
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
-    ADD_CORS(addQuestionTag)
 
     ENDPOINT("PUT", "/update", updateQuestion, BODY_DTO(Object<dto::Question>, req_body)) {
         return createDtoResponse(Status::CODE_200, question_service.updateQuestion(req_body));
@@ -78,7 +76,6 @@ public:
         info->addConsumes<Object<dto::Question>>("application/json");
         info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(updateQuestion)
 
     ENDPOINT("DELETE",
              "/delete/tag",
@@ -100,7 +97,6 @@ public:
         info->queryParams.add<Int32>("tag_id").required         = true;
         info->addResponse<Object<dto::Response>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(deleteQuestionTag)
 
     ENDPOINT("DELETE", "/delete", deleteQuestion, QUERY(Int32, question_id)) {
         return createDtoResponse(Status::CODE_200, question_service.deleteQuestion(question_id));
@@ -114,7 +110,6 @@ public:
         info->queryParams.add<Int32>("question_id").required    = true;
         info->addResponse<Object<dto::Response>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(deleteQuestion)
 
     ENDPOINT("GET", "/get", getQuestionById, QUERY(Int32, question_id)) {
         return createDtoResponse(Status::CODE_200, question_service.getQuestionById(question_id));
@@ -128,7 +123,6 @@ public:
         info->queryParams.add<Int32>("question_id").required    = true;
         info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(getQuestionById)
 
     ENDPOINT("POST",
              "/get/by/conditions",
@@ -145,7 +139,6 @@ public:
         info->addConsumes<Object<dto::QuestionCondition>>("application/json");
         info->addResponse<Object<dto::ResponseQuestionPage>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(getQuestions)
 
     ENDPOINT("POST",
              "/create/sub_question",
@@ -165,7 +158,6 @@ public:
         info->addConsumes<Object<dto::Question>>("application/json");
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
-    ADD_CORS(addSubQuestion)
 };
 
 }  // namespace QuickExam::controller

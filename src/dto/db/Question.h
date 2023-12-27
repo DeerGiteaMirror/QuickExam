@@ -23,9 +23,9 @@ class Question : public oatpp::DTO {
         info->description = "Question id";
     }
 
-    DTO_FIELD(Boolean, is_sub_question) = false;
-    DTO_FIELD_INFO(is_sub_question) {
-        info->description = "Is sub question";
+    DTO_FIELD(Int32, parent) = -1;
+    DTO_FIELD_INFO(parent) {
+        info->description = "Parent question id (-1 if not a sub question)";
     }
 
     DTO_FIELD(String, title);
@@ -38,12 +38,12 @@ class Question : public oatpp::DTO {
         info->description = "Question type";
     }
 
-    DTO_FIELD(Int32, estimated_time_sec);
+    DTO_FIELD(Int32, estimated_time_sec) = 0;
     DTO_FIELD_INFO(estimated_time_sec) {
         info->description = "Estimated time to answer the question";
     }
 
-    DTO_FIELD(Int32, score);
+    DTO_FIELD(Int32, score) = 0;
     DTO_FIELD_INFO(score) {
         info->description = "Preset score";
     }
@@ -53,14 +53,24 @@ class Question : public oatpp::DTO {
         info->description = "Is published (only published questions will be referenced in exams)";
     }
 
-    DTO_FIELD(Int32, reference_count);
+    DTO_FIELD(Int32, reference_count) = 0;
     DTO_FIELD_INFO(reference_count) {
         info->description = "Reference count";
     }
 
-    DTO_FIELD(Int32, correct_count);
+    DTO_FIELD(Int32, correct_count) = 0;
     DTO_FIELD_INFO(correct_count) {
         info->description = "Correct count";
+    }
+
+    DTO_FIELD(String, created_at);
+    DTO_FIELD_INFO(created_at) {
+        info->description = "Content type";
+    }
+
+    DTO_FIELD(String, updated_at);
+    DTO_FIELD_INFO(updated_at) {
+        info->description = "Content type";
     }
 };
 

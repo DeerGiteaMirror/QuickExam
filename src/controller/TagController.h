@@ -46,7 +46,6 @@ public:
         info->addConsumes<Object<dto::Tag>>("application/json");
         info->addResponse<Object<dto::ResponseTag>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(createTag)
 
     ENDPOINT("PUT", "/update", updateTag, BODY_DTO(Object<dto::Tag>, request_body)) {
         return createDtoResponse(Status::CODE_200, tag_service.updateTag(request_body));
@@ -58,7 +57,6 @@ public:
         info->addConsumes<Object<dto::Tag>>("application/json");
         info->addResponse<Object<dto::ResponseTag>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(updateTag)
 
     ENDPOINT("DELETE", "/delete", deleteTag, QUERY(Int32, tag_id)) {
         return createDtoResponse(Status::CODE_200, tag_service.deleteTag(tag_id));
@@ -73,7 +71,6 @@ public:
         info->addResponse<Object<dto::basic::Response<String>>>(Status::CODE_200,
                                                                 "application/json");
     }
-    ADD_CORS(deleteTag)
 
     ENDPOINT("POST",
              "/get/list/by/conditions",
@@ -89,7 +86,6 @@ public:
         info->addConsumes<Object<dto::TagCondition>>("application/json");
         info->addResponse<Object<dto::ResponseTagPage>>(Status::CODE_200, "application/json");
     }
-    ADD_CORS(getTagListByConditions)
 };
 
 }  // namespace QuickExam::controller

@@ -12,6 +12,7 @@
 #include <oatpp/parser/json/mapping/ObjectMapper.hpp>
 #include <oatpp/web/server/HttpConnectionHandler.hpp>
 #include <oatpp/web/server/HttpRouter.hpp>
+#include <oatpp/web/server/interceptor/AllowCorsGlobal.hpp>
 
 namespace QuickExam::component {
 
@@ -45,6 +46,13 @@ public:
                         objectMapper);  // get ObjectMapper component
         auto connectionHandler = oatpp::web::server::HttpConnectionHandler::createShared(router);
         connectionHandler->setErrorHandler(std::make_shared<ErrorHandler>(objectMapper));
+
+        /* Add CORS request and response interceptors */
+        auto allow_cors = std::make_shared<oatpp::web::server::interceptor::AllowCorsGlobal>(
+            "*", "GET, POST, OPTIONS, PUT, DELETE, PATCH", "*");
+        connectionHandler->addRequestInterceptor(
+            std::make_shared<oatpp::web::server::interceptor::AllowOptionsGlobal>());
+        connectionHandler->addResponseInterceptor(allow_cors);
         return connectionHandler;
     }());
 };

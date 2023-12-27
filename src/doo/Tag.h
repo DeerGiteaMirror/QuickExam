@@ -66,7 +66,20 @@ public:
 
     DEFINE_COUNT_QUERY("qe_tag", dto::TagCondition)
 
-    DEFINE_PAGE_QUERY("qe_tag", dto::TagCondition)
+    std::shared_ptr<oatpp::orm::QueryResult>
+    getPageByConditions(const oatpp::Object<dto::TagCondition> &query) {
+        std::string offset = std::to_string((query->page - 1) * query->page_size);
+        std::string limit  = std::to_string(query->page_size);
+        std::string sql    = "SELECT ";
+        sql += "id, name, hex_color ";
+        sql += "FROM qe_tag ";
+        sql += conditionSqlString(query);
+        sql += "ORDER BY " + query->sort_by + " " + query->sort_order + " ";
+        sql += "OFFSET " + offset + " ";
+        sql += "LIMIT " + limit + ";";
+        LOGD("DEFINE_PAGE_QUERY", "Sql %s", sql.c_str());
+        return m_executor->execute(sql, {});
+    }
 };
 
 }  // namespace QuickExam::doo

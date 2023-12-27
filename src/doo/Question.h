@@ -20,12 +20,12 @@ public:
 
     QUERY(insertQuestion,
           "INSERT INTO qe_question "
-          "(id, is_sub_question, title, type, estimated_time_sec, score, "
+          "(id, parent, title, type, estimated_time_sec, score, "
           "is_published, reference_count, correct_count) "
           "VALUES "
-          "(DEFAULT, :q.is_sub_question, :q.title, :q.type, :q.estimated_time_sec, :q.score, "
-          ":q.is_published, :q.reference_count, :q.correct_count) "
-          "RETURNING id, is_sub_question, title, type, estimated_time_sec, score, "
+          "(DEFAULT, :q.parent, :q.title, :q.type, :q.estimated_time_sec, :q.score, "
+          "DEFAULT, DEFAULT, DEFAULT) "
+          "RETURNING id, parent, title, type, estimated_time_sec, score, "
           "is_published, reference_count, correct_count",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Question>, q))
@@ -59,7 +59,10 @@ public:
 
     QUERY(getQuestion,
           "SELECT "
-          "* "
+          "id, parent, title, type, estimated_time_sec, score, "
+          "is_published, reference_count, correct_count, "
+          "to_char(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at, "
+          "to_char(updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at "
           "FROM qe_question "
           "WHERE id = :id",
           PREPARE(true),
@@ -134,17 +137,20 @@ public:
 
     QUERY(updateQuestion,
           "UPDATE qe_question "
-          "SET is_sub_question = :q.is_sub_question, "
+          "SET parent = :q.parent, "
           "title = :q.title, "
           "type = :q.type, "
           "estimated_time_sec = :q.estimated_time_sec, "
           "score = :q.score "
           "is_published = :q.is_published, "
           "reference_count = :q.reference_count, "
-          "correct_count = :q.correct_count "
+          "correct_count = :q.correct_count, "
+          "updated_at = CURRENT_TIMESTAMP "
           "WHERE id = :q.id "
-          "RETURNING id, is_sub_question, title, type, estimated_time_sec, score, "
-          "is_published, reference_count, correct_count",
+          "RETURNING id, parent, title, type, estimated_time_sec, score, "
+          "is_published, reference_count, correct_count, "
+          "to_char(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at, "
+          "to_char(updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at",
           PREPARE(true),
           PARAM(oatpp::Object<dto::db::Question>, q))
 
@@ -194,12 +200,49 @@ public:
             sql.pop_back();
             sql += ")) ";
         }
+        if (query->is_published == 0 || query->is_published == 1) {
+            std::string bool_str = query->is_published == 0 ? "false" : "true";
+            sql += "AND ";
+            sql += "is_published = " + bool_str + " ";
+        }
+        if (query->after_create_time != 0) {
+            sql += "AND ";
+            sql += "created_at > to_timestamp(" + std::to_string(query->after_create_time) + ") ";
+        }
+        if (query->before_create_time != 0) {
+            sql += "AND ";
+            sql += "created_at < to_timestamp(" + std::to_string(query->before_create_time) + ") ";
+        }
+        if (query->after_update_time != 0) {
+            sql += "AND ";
+            sql += "updated_at > to_timestamp(" + std::to_string(query->after_update_time) + ") ";
+        }
+        if (query->before_update_time != 0) {
+            sql += "AND ";
+            sql += "updated_at < to_timestamp(" + std::to_string(query->before_update_time) + ") ";
+        }
         return sql;
     }
 
     DEFINE_COUNT_QUERY("qe_question", dto::QuestionCondition)
 
-    DEFINE_PAGE_QUERY("qe_question", dto::QuestionCondition)
+    std::shared_ptr<oatpp::orm::QueryResult>
+    getPageByConditions(const oatpp::Object<dto::QuestionCondition> &query) {
+        std::string offset = std::to_string((query->page - 1) * query->page_size);
+        std::string limit  = std::to_string(query->page_size);
+        std::string sql    = "SELECT ";
+        sql += "id, parent, title, type, estimated_time_sec, score, ";
+        sql += "is_published, reference_count, correct_count, ";
+        sql += "to_char(created_at, 'YYYY-MM-DD HH24:MI:SS') as created_at, ";
+        sql += "to_char(updated_at, 'YYYY-MM-DD HH24:MI:SS') as updated_at ";
+        sql += "FROM qe_question ";
+        sql += conditionSqlString(query);
+        sql += "ORDER BY " + query->sort_by + " " + query->sort_order + " ";
+        sql += "OFFSET " + offset + " ";
+        sql += "LIMIT " + limit + ";";
+        LOGD("DEFINE_PAGE_QUERY", "Sql %s", sql.c_str());
+        return m_executor->execute(sql, {});
+    }
 };
 
 }  // namespace QuickExam::doo

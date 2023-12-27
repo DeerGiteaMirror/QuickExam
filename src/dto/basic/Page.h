@@ -21,22 +21,6 @@
         return m_executor->execute(sql, {});                                                       \
     }
 
-#define DEFINE_PAGE_QUERY(TABLE_NAME, CONDITION_DTO)                                               \
-    std::shared_ptr<oatpp::orm::QueryResult> getPageByConditions(                                  \
-        const oatpp::Object<CONDITION_DTO> &query) {                                               \
-        std::string offset = std::to_string((query->page - 1) * query->page_size);                 \
-        std::string limit  = std::to_string(query->page_size);                                     \
-        std::string sql    = "SELECT ";                                                            \
-        sql += "* ";                                                                               \
-        sql += "FROM " TABLE_NAME " ";                                                             \
-        sql += conditionSqlString(query);                                                          \
-        sql += "ORDER BY " + query->sort_by + " " + query->sort_order + " ";                       \
-        sql += "OFFSET " + offset + " ";                                                           \
-        sql += "LIMIT " + limit + ";";                                                             \
-        LOGD("DEFINE_PAGE_QUERY", "Sql %s", sql.c_str());                                          \
-        return m_executor->execute(sql, {});                                                       \
-    }
-
 #define GET_PAGE(DOO, CONDITION_DATA, PAGE_DATA, ITEM_DTO)                                         \
     {                                                                                              \
         auto DB_RES = (DOO)->getPageCountByConditions(CONDITION_DATA);                             \
@@ -124,6 +108,26 @@ class Condition : public oatpp::DTO {
     DTO_FIELD(String, search) = "";
     DTO_FIELD_INFO(search) {
         info->description = "Search keyword";
+    }
+
+    DTO_FIELD(Int64, after_create_time) = 0L;
+    DTO_FIELD_INFO(after_create_time) {
+        info->description = "After create time";
+    }
+
+    DTO_FIELD(Int64, before_create_time) = 0L;
+    DTO_FIELD_INFO(before_create_time) {
+        info->description = "Before create time";
+    }
+
+    DTO_FIELD(Int64, after_update_time) = 0L;
+    DTO_FIELD_INFO(after_update_time) {
+        info->description = "After update time";
+    }
+
+    DTO_FIELD(Int64, before_update_time) = 0L;
+    DTO_FIELD_INFO(before_update_time) {
+        info->description = "Before update time";
     }
 };
 

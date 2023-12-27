@@ -8,7 +8,6 @@
 #include <dto/Answer.h>
 #include <dto/QuestionContent.h>
 #include <dto/Tag.h>
-#include <dto/basic/OperateTime.h>
 #include <dto/basic/Page.h>
 #include <oatpp/core/Types.hpp>
 #include <oatpp/core/macro/codegen.hpp>
@@ -39,11 +38,6 @@ class Question : public db::Question {
     DTO_FIELD_INFO(tags) {
         info->description = "Question tags";
     }
-
-    DTO_FIELD(Object<basic::OperateTime>, operate_time);
-    DTO_FIELD_INFO(operate_time) {
-        info->description = "Question operate time";
-    }
 };
 
 class QuestionCondition : public basic::Condition {
@@ -57,6 +51,11 @@ class QuestionCondition : public basic::Condition {
     DTO_FIELD(List<Int32>, types) = List<Int32>::createShared();
     DTO_FIELD_INFO(types) {
         info->description = "Question types (empty means all types)";
+    }
+
+    DTO_FIELD(Int32, is_published) = -1;
+    DTO_FIELD_INFO(is_published) {
+        info->description = "Is published (0: false, 1: true, -1: all)";
     }
 };
 

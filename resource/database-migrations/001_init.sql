@@ -10,14 +10,16 @@ CREATE TABLE IF NOT EXISTS qe_tag
 CREATE TABLE IF NOT EXISTS qe_question
 (
     id                 SERIAL PRIMARY KEY,
-    is_sub_question    BOOLEAN NOT NULL DEFAULT FALSE,
-    title              TEXT    NOT NULL,
-    type               INTEGER NOT NULL,
-    estimated_time_sec INTEGER NOT NULL,
-    score              INTEGER NOT NULL,
-    is_published       BOOLEAN NOT NULL DEFAULT FALSE,
-    reference_count    INTEGER NOT NULL DEFAULT 0,
-    correct_count INTEGER NOT NULL DEFAULT 0
+    parent             INTEGER   NOT NULL DEFAULT -1,
+    title              TEXT      NOT NULL,
+    type               INTEGER   NOT NULL DEFAULT -1,
+    estimated_time_sec INTEGER   NOT NULL DEFAULT 10,
+    score              INTEGER   NOT NULL DEFAULT 1,
+    is_published       BOOLEAN   NOT NULL DEFAULT FALSE,
+    reference_count    INTEGER   NOT NULL DEFAULT 0,
+    correct_count      INTEGER   NOT NULL DEFAULT 0,
+    created_at         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS qe_question_content
