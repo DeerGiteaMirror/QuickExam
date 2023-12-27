@@ -37,7 +37,8 @@
         if ((CONDITION_DATA)->page <= 0) {                                                         \
             (CONDITION_DATA)->page = 1;                                                            \
         }                                                                                          \
-        DB_RES = (DOO)->getPageByConditions(CONDITION_DATA);                                       \
+        (PAGE_DATA)->page = (CONDITION_DATA)->page;                                                \
+        DB_RES            = (DOO)->getPageByConditions(CONDITION_DATA);                            \
         ASSERT_DB(DB_RES);                                                                         \
         (PAGE_DATA)->items = DB_RES->fetch<oatpp::List<oatpp::Object<ITEM_DTO>>>();                \
     }
