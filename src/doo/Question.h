@@ -176,9 +176,12 @@ public:
     DEFINE_CONDITION_FUNC(const oatpp::Object<dto::QuestionCondition> &query) {
         std::string sql = "WHERE 1 = 1 ";
         if (!query->search->empty()) {
-            sql += "AND ";
+            sql += "AND (";
             sql += "id IN (SELECT question_id FROM qe_question_content WHERE content LIKE '%" +
                    query->search + "%') ";
+            sql += "OR ";
+            sql += "title LIKE '%" + query->search + "%' ";
+            sql += ") ";
         }
         if (!query->types->empty()) {
             sql += "AND ";
