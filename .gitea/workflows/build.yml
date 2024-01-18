@@ -19,6 +19,7 @@ jobs:
       - name: "🍵 Install third-party"
         run: |
           cd tools/scripts && ./InstallDep.sh
+          cat ../../third_party/.cache/build.log
       - name: "🏠 Build"
         run: |
           mkdir build && cd build && cmake .. && make -j
