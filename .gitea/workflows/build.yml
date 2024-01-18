@@ -4,6 +4,8 @@ on:
   push:
     tags:
       - '*'
+    paths:
+      - '.gitea/workflows/build.yml'
 
 jobs:
   build:
@@ -15,7 +17,7 @@ jobs:
           fetch-depth: 0
       - name: "🧺 Set up Environment"
         run: |
-          apt update && apt install -y wget cmake bison flex
+          apt update && apt install -y wget cmake bison flex git
       - name: "🍵 Install third-party"
         run: |
           cd tools/scripts && ./InstallDep.sh
