@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - '*'
-    paths:
-      - '.github/workflows/main.yml'
 
 jobs:
   build:
