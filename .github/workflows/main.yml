@@ -1,0 +1,36 @@
+name: C++ CI-CD
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: "🧺 Set up Environment"
+        run: |
+          apt update && apt install -y wget cmake bison flex
+      - name: "🍵 Install third-party"
+        run: |
+          cd tools/scripts && ./InstallDep.sh
+      - name: "🏠 Build"
+        run: |
+          mkdir build && cd build && cmake .. && make -j
+      - name: "📦 Stage"
+        run: |
+          mkdir staging
+          cp bin/* staging
+          cp -r resource staging
+      - name: "🚀 Release"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "${{ env.RELEASE_VERSION }}"
+          prerelease: false
+          title: "Release ${{ env.RELEASE_VERSION }}"
+          files: |
+            staging/*

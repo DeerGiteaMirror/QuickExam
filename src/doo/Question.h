@@ -46,7 +46,7 @@ public:
           "(DEFAULT, :q.sub_question_id, :q.question_id) "
           "RETURNING id, sub_question_id, question_id",
           PREPARE(true),
-          PARAM(oatpp::Object<dto::db::QuestionSubQuestions>, q))
+          PARAM(oatpp::Object<dto::db::QuestionSubQuestion>, q))
 
     QUERY(insertQuestionTag,
           "INSERT INTO qe_question_tag "
@@ -55,7 +55,7 @@ public:
           "(DEFAULT, :q.tag_id, :q.question_id, :q.priority) "
           "RETURNING id, tag_id, question_id, priority",
           PREPARE(true),
-          PARAM(oatpp::Object<dto::db::QuestionTags>, q))
+          PARAM(oatpp::Object<dto::db::QuestionTag>, q))
 
     QUERY(getQuestion,
           "SELECT "
@@ -134,6 +134,13 @@ public:
           "WHERE question_id = :question_id",
           PREPARE(true),
           PARAM(oatpp::Int32, question_id))
+
+    QUERY(deleteQuestionTag,
+          "DELETE "
+          "FROM qe_question_tag "
+          "WHERE id = :id",
+          PREPARE(true),
+          PARAM(oatpp::Int32, id))
 
     QUERY(updateQuestion,
           "UPDATE qe_question "

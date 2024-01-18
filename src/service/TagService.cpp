@@ -55,7 +55,7 @@ List<Object<Tag>> TagService::getTagsByQuestion(const Int32 &question_id) {
     auto return_list = List<Object<dto::Tag>>::createShared();
     auto db_res      = question_doo->getQuestionTagsIdByQuestionId(question_id);
     IF_DB_ERROR(List<Object<dto::Tag>>::createShared());
-    auto tags_id = db_res->fetch<List<Object<dto::db::QuestionTags>>>();
+    auto tags_id = db_res->fetch<List<Object<dto::db::QuestionTag>>>();
     for (auto &tag_id : *tags_id) {
         auto tag = getTagById(tag_id->tag_id);
         return_list->push_back(tag);

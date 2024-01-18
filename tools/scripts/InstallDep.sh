@@ -57,7 +57,7 @@ execute "compiling oatpp-swagger" "failed to make oatpp-swagger" \
 execute "installing oatpp-swagger" "failed to make install oatpp-swagger" \
     make install
 
-#  install PostgreSQL dev
+#  install PostgreSQL dev (need bison and flex)
 cd "$CACHE_PATH" || exit 1
 execute "cloning PostgreSQL dev" "failed to install PostgreSQL dev" \
     git clone https://ssl.lunadeer.cn:14446/mirror/postgresql.git && \

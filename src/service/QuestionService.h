@@ -58,7 +58,16 @@ public:  // ---> Controller methods (Content)
     updateQuestionContent(const Object<dto::QuestionContent> &content);
 
 public:  // ---> Controller methods (Tag)
+    Object<dto::Response> questionAddTag(const Int32 &question_id,
+                                         const Int32 &tag_id,
+                                         const Int32 &priority);
+
+    Object<dto::Response> questionDeleteTag(const Int32 &id);
+
 public:  // ---> Controller methods (Sub Question)
+    Object<dto::ResponseQuestion> questionAddSubQuestion(const Int32                 &parent_id,
+                                                         const Object<dto::Question> &question);
+
 public:  // ---> Service methods
     /**
      * @brief Get the Question Details object

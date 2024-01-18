@@ -49,9 +49,14 @@ public:
         info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
 
-    ENDPOINT("POST", "/add/tag", addQuestionTag, QUERY(Int32, question_id), QUERY(Int32, tag_id)) {
-        // todo: add tag
-        return createResponse(Status::CODE_200);
+    ENDPOINT("POST",
+             "/add/tag",
+             addQuestionTag,
+             QUERY(Int32, question_id),
+             QUERY(Int32, tag_id),
+             QUERY(Int32, priority)) {
+        return createDtoResponse(Status::CODE_200,
+                                 question_service.questionAddTag(question_id, tag_id, priority));
     }
     ENDPOINT_INFO(addQuestionTag) {
         info->addTag("Question");
@@ -63,6 +68,9 @@ public:
         info->queryParams.add<Int32>("tag_id").name             = "tag_id";
         info->queryParams.add<Int32>("tag_id").description      = "Tag id";
         info->queryParams.add<Int32>("tag_id").required         = true;
+        info->queryParams.add<Int32>("priority").name           = "priority";
+        info->queryParams.add<Int32>("priority").description    = "Tag priority";
+        info->queryParams.add<Int32>("priority").required       = true;
         info->addResponse(Status::CODE_200, "Success, then re-get the question");
     }
 
@@ -77,24 +85,16 @@ public:
         info->addResponse<Object<dto::ResponseQuestion>>(Status::CODE_200, "application/json");
     }
 
-    ENDPOINT("DELETE",
-             "/delete/tag",
-             deleteQuestionTag,
-             QUERY(Int32, question_id),
-             QUERY(Int32, tag_id)) {
-        // todo: delete tag
-        return createResponse(Status::CODE_200);
+    ENDPOINT("DELETE", "/delete/tag", deleteQuestionTag, QUERY(Int32, id)) {
+        return createDtoResponse(Status::CODE_200, question_service.questionDeleteTag(id));
     }
     ENDPOINT_INFO(deleteQuestionTag) {
         info->addTag("Question");
-        info->summary                                           = "Delete Question Tag";
-        info->description                                       = "Delete a tag from a question";
-        info->queryParams.add<Int32>("question_id").name        = "question_id";
-        info->queryParams.add<Int32>("question_id").description = "Question id";
-        info->queryParams.add<Int32>("question_id").required    = true;
-        info->queryParams.add<Int32>("tag_id").name             = "tag_id";
-        info->queryParams.add<Int32>("tag_id").description      = "Tag id";
-        info->queryParams.add<Int32>("tag_id").required         = true;
+        info->summary                                  = "Delete Question Tag";
+        info->description                              = "Delete a tag from a question";
+        info->queryParams.add<Int32>("id").name        = "id";
+        info->queryParams.add<Int32>("id").description = "ID";
+        info->queryParams.add<Int32>("id").required    = true;
         info->addResponse<Object<dto::Response>>(Status::CODE_200, "application/json");
     }
 
@@ -145,8 +145,8 @@ public:
              addSubQuestion,
              QUERY(Int32, parent_question_id),
              BODY_DTO(Object<dto::Question>, req_body)) {
-        // todo: add sub question
-        return createResponse(Status::CODE_200);
+        return createDtoResponse(Status::CODE_200, question_service.questionAddSubQuestion(
+                                                       parent_question_id, req_body));
     }
     ENDPOINT_INFO(addSubQuestion) {
         info->addTag("Question");

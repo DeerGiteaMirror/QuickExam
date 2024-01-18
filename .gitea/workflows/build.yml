@@ -1,0 +1,40 @@
+name: C++ CI-CD
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Pull & Checkout"
+        uses: https://ssl.lunadeer.cn:14446/actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: "🧺 Set up Environment"
+        run: |
+          apt update && apt install -y wget cmake bison flex
+      - name: "🍵 Install third-party"
+        run: |
+          cd tools/scripts && ./InstallDep.sh
+      - name: "🏠 Build"
+        run: |
+          mkdir build && cd build && cmake .. && make -j
+      - name: "📦 Stage"
+        run: |
+          mkdir staging
+          cp bin/* staging
+          cp -r resource staging
+      - name: "🚀 Release"
+        run: |
+          wget --no-check-certificate https://go.dev/dl/go1.21.6.linux-amd64.tar.gz 
+          rm -rf /usr/local/go && tar -C /usr/local -xzf go1.21.6.linux-amd64.tar.gz
+          ln -s /usr/local/go/bin/go /usr/bin/go
+          go version
+      - uses: https://ssl.lunadeer.cn:14446/actions/release-action@main
+        with:
+          files: |-
+            staging/*
+          api_key: '${{secrets.RELEASE_TOKEN}}'

@@ -84,7 +84,7 @@ List<Object<dto::Question>> QuestionService::getSubQuestions(const Int32 &questi
     auto return_list = List<Object<dto::Question>>::createShared();
     auto db_res      = question_doo->getQuestionSubQuestionsIdByQuestionId(question_id);
     IF_DB_ERROR(return_list);
-    auto sub_questions_id = db_res->fetch<List<Object<dto::db::QuestionSubQuestions>>>();
+    auto sub_questions_id = db_res->fetch<List<Object<dto::db::QuestionSubQuestion>>>();
     if (sub_questions_id->empty())
         return return_list;
     for (auto &sub_question_id : *sub_questions_id) {
@@ -140,6 +140,44 @@ QuestionService::getQuestionContentsByQuestionId(const Int32 &question_id) {
     auto return_list = db_res->fetch<List<Object<dto::QuestionContent>>>();
     auto response    = dto::ResponseQuestionContents::createShared();
     response->data   = return_list;
+    RETURN_STATUS_SUCCESS(response);
+}
+
+Object<dto::Response> QuestionService::questionAddTag(const Int32 &question_id,
+                                                      const Int32 &tag_id,
+                                                      const Int32 &priority) {
+    auto question_tag         = dto::db::QuestionTag::createShared();
+    question_tag->question_id = question_id;
+    question_tag->tag_id      = tag_id;
+    question_tag->priority    = priority;
+    auto db_res               = question_doo->insertQuestionTag(question_tag);
+    ASSERT_DB(db_res);
+    FETCH_SINGLE(db_res, dto::db::QuestionTag, question_tag);
+    auto response = dto::Response::createShared();
+    RETURN_STATUS_SUCCESS(response);
+}
+
+Object<dto::Response> QuestionService::questionDeleteTag(const Int32 &id) {
+    auto db_res = question_doo->deleteQuestionTag(id);
+    ASSERT_DB(db_res);
+    auto response = dto::Response::createShared();
+    RETURN_STATUS_SUCCESS(response);
+}
+
+Object<dto::ResponseQuestion>
+QuestionService::questionAddSubQuestion(const Int32                 &parent_id,
+                                        const Object<dto::Question> &question) {
+    auto db_res = question_doo->insertQuestion(question);
+    ASSERT_DB(db_res);
+    auto sub_question = dto::Question::createShared();
+    FETCH_SINGLE(db_res, dto::Question, sub_question);
+    auto question_sub_question             = dto::db::QuestionSubQuestion::createShared();
+    question_sub_question->question_id     = parent_id;
+    question_sub_question->sub_question_id = sub_question->id;
+    db_res = question_doo->insertQuestionSubQuestion(question_sub_question);
+    ASSERT_DB(db_res);
+    auto response  = dto::ResponseQuestion::createShared();
+    response->data = sub_question;
     RETURN_STATUS_SUCCESS(response);
 }
 
